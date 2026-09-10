@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plotline_mobile/commom/helpers/is_dark_mode.dart';
+import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/features/home/presentation/pages/home.dart';
 
 class SplashPage extends StatefulWidget {
