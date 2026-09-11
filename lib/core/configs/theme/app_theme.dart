@@ -19,6 +19,13 @@ class AppTheme {
       bodyLarge: TextStyle(color: AppColors.lightMainText),
       bodyMedium: TextStyle(color: AppColors.lightSecondaryText),
     ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+    ),
   );
 
   // dark theme
@@ -37,6 +44,13 @@ class AppTheme {
     textTheme: TextTheme(
       bodyLarge: TextStyle(color: AppColors.darkMainText),
       bodyMedium: TextStyle(color: AppColors.darkSecondaryText),
+    ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
     ),
   );
 }
