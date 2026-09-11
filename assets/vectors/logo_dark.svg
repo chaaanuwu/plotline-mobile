@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50">
+  <text
+    x="0"
+    y="38"
+    font-family="system-ui, -apple-system, sans-serif"
+    font-weight="900"
+    font-size="40"
+    letter-spacing="-2"
+  >
+    <tspan fill="#FFFFFF">PLOT</tspan><tspan fill="#F59E0B">LINE</tspan>
+  </text>
+</svg>

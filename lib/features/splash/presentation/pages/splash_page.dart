@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
-import 'package:plotline_mobile/features/home/presentation/pages/home.dart';
+import 'package:plotline_mobile/features/intro/presentation/pages/intro_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -52,7 +52,7 @@ class _SplashPageState extends State<SplashPage>
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const HomePage(),
+              const IntroPage(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               FadeTransition(opacity: animation, child: child),
           transitionDuration: const Duration(milliseconds: 400),
@@ -70,7 +70,6 @@ class _SplashPageState extends State<SplashPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.theme.scaffoldBackgroundColor,
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
