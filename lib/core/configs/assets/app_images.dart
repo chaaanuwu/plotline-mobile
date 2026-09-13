@@ -1,4 +1,4 @@
-class AppPosters {
+class AppImages {
   static const String basePath = 'assets/images/posters/';
   static const String format = '.webp';
 
