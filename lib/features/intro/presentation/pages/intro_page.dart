@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
+import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/core/configs/assets/app_images.dart';
-import 'package:plotline_mobile/core/configs/assets/app_vectors.dart';
 import 'package:plotline_mobile/core/configs/theme/app_colors.dart';
+import 'package:plotline_mobile/features/auth/presentation/pages/signin.dart';
 import 'package:plotline_mobile/features/intro/presentation/widgets/marquee_column.dart';
 
 class IntroPage extends StatefulWidget {
@@ -20,24 +20,24 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
   late final AnimationController _controller3;
 
   final List<String> _column1 = const [
-    AppPosters.poster1,
-    AppPosters.poster2,
-    AppPosters.poster3,
-    AppPosters.poster4,
+    AppImages.poster1,
+    AppImages.poster2,
+    AppImages.poster3,
+    AppImages.poster4,
   ];
 
   final List<String> _column2 = const [
-    AppPosters.poster5,
-    AppPosters.poster6,
-    AppPosters.poster7,
-    AppPosters.poster8,
+    AppImages.poster5,
+    AppImages.poster6,
+    AppImages.poster7,
+    AppImages.poster8,
   ];
 
   final List<String> _column3 = const [
-    AppPosters.poster9,
-    AppPosters.poster10,
-    AppPosters.poster11,
-    AppPosters.poster12,
+    AppImages.poster9,
+    AppImages.poster10,
+    AppImages.poster11,
+    AppImages.poster12,
   ];
 
   @override
@@ -167,7 +167,7 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
                   const SizedBox(height: 20),
 
                   // Logo
-                  SvgPicture.asset(AppVectors.logoDark, width: 180, height: 60),
+                  PlotlineLogo(overrideLogoTheme: true),
 
                   const SizedBox(height: 12),
 
@@ -198,10 +198,13 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
 
                   // Get Started button
                   BasicAppButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(
+                        context,
+                      ).push(MaterialPageRoute(builder: (_) => SigninPage()));
+                    },
                     title: "Get Started",
                     backgroundColor: context.theme.colorScheme.primary,
-                    textColor: Colors.black,
                   ),
 
                   const SizedBox(height: 32),
