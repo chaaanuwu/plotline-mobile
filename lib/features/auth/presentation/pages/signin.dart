@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/common/widgets/appbar/app_bar.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
@@ -6,6 +7,9 @@ import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/common/widgets/poster_header/poster_header.dart';
 import 'package:plotline_mobile/common/widgets/text_field/basic_text_field.dart';
 import 'package:plotline_mobile/core/configs/assets/app_images.dart';
+import 'package:plotline_mobile/features/auth/data/models/signin_user_req.dart';
+import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:plotline_mobile/features/auth/presentation/bloc/auth_event.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -80,7 +84,18 @@ class _SigninPageState extends State<SigninPage> {
             const SizedBox(height: 16),
 
             BasicAppButton(
-              onPressed: () {},
+              onPressed: () {
+                final signinUserReq = SigninUserReq(
+                  email: _emailController.text.trim(),
+                  password: _passwordController.text,
+                );
+
+                context.read<AuthBloc>().add(
+                  SigninSubmitted(
+                    signinUserReq: signinUserReq,
+                  ),
+                );
+              },
               title: "Sign In",
               backgroundColor: context.theme.colorScheme.primary,
             ),

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/core/configs/assets/app_images.dart';
 import 'package:plotline_mobile/core/configs/theme/app_colors.dart';
+import 'package:plotline_mobile/features/auth/domain/usecases/signin_usecase.dart';
+import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:plotline_mobile/features/auth/presentation/pages/signin.dart';
 import 'package:plotline_mobile/features/intro/presentation/widgets/marquee_column.dart';
+import 'package:plotline_mobile/service_locator.dart';
 
 class IntroPage extends StatefulWidget {
   const IntroPage({super.key});
@@ -199,9 +203,14 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
                   // Get Started button
                   BasicAppButton(
                     onPressed: () {
-                      Navigator.of(
-                        context,
-                      ).push(MaterialPageRoute(builder: (_) => SigninPage()));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => BlocProvider(
+                            create: (_) => AuthBloc(sl<SigninUsecase>()),
+                            child: const SigninPage(),
+                          ),
+                        ),
+                      );
                     },
                     title: "Get Started",
                     backgroundColor: context.theme.colorScheme.primary,
