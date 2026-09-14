@@ -11,6 +11,10 @@ dependencies:
     sdk: flutter
 
   flutter_dotenv: ^6.0.1
+  dartz: ^0.10.1
+  get_it: ^9.2.1
+  dio: ^5.11.1
+  flutter_bloc: ^9.1.1
 
 dev_dependencies:
   flutter_test:
@@ -22,3 +26,4 @@ flutter:
 
   assets:
     - assets/images/posters/
+    - .env

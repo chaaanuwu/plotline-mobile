@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:plotline_mobile/core/configs/theme/app_theme.dart';
 import 'package:plotline_mobile/features/splash/presentation/pages/splash_page.dart';
+import 'package:plotline_mobile/service_locator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: '.env');
+
+  await initializeDependencies();
 
   runApp(const Plotline());
 }
