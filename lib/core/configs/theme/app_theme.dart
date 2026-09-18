@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plotline_mobile/core/configs/theme/app_colors.dart';
 
 class AppTheme {
-  // light theme
+  // Light theme
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.lightBackground,
@@ -23,12 +23,14 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        backgroundColor: AppColors.lightButtonBackground,
+        foregroundColor: AppColors.lightButtonText,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
     ),
   );
 
-  // dark theme
+  // Dark theme
   static final darkTheme = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.darkBackground,
@@ -49,6 +51,8 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        backgroundColor: AppColors.darkButtonBackground,
+        foregroundColor: AppColors.darkButtonText,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
     ),
