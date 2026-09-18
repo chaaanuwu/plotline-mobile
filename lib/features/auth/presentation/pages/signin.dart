@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plotline_mobile/core/configs/assets/app_images.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/common/widgets/appbar/app_bar.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
-import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
-import 'package:plotline_mobile/common/widgets/poster_header/poster_header.dart';
 import 'package:plotline_mobile/common/widgets/text_field/basic_text_field.dart';
-import 'package:plotline_mobile/core/configs/assets/app_images.dart';
+import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
+import 'package:plotline_mobile/features/auth/presentation/pages/signup.dart';
+import 'package:plotline_mobile/features/auth/presentation/widgets/auth_header.dart';
+import 'package:plotline_mobile/features/auth/presentation/widgets/auth_prompt.dart';
+import 'package:plotline_mobile/features/auth/presentation/widgets/poster_header.dart';
 import 'package:plotline_mobile/features/auth/data/models/signin_user_req.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_event.dart';
@@ -28,7 +31,16 @@ class _SigninPageState extends State<SigninPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppBar(title: PlotlineLogo()),
-      bottomNavigationBar: _signupText(context),
+      bottomNavigationBar: AuthPrompt(
+        prompt: "Don't have an account?",
+        actionText: "Register",
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) => SignupPage()),
+          );
+        },
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(30, 24, 30, 30),
         child: Column(
@@ -45,7 +57,10 @@ class _SigninPageState extends State<SigninPage> {
 
             const SizedBox(height: 32),
 
-            _header(context),
+            AuthHeader(
+              title: "Sign In",
+              subtitle: "Your next movie story starts here.",
+            ),
 
             const SizedBox(height: 24),
 
@@ -91,72 +106,11 @@ class _SigninPageState extends State<SigninPage> {
                 );
 
                 context.read<AuthBloc>().add(
-                  SigninSubmitted(
-                    signinUserReq: signinUserReq,
-                  ),
+                  SigninSubmitted(signinUserReq: signinUserReq),
                 );
               },
               title: "Sign In",
               backgroundColor: context.theme.colorScheme.primary,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Header
-  Widget _header(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Sign In",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -0.8,
-            color: context.theme.textTheme.bodyLarge?.color,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          "Your next movie story starts here.",
-          style: TextStyle(
-            fontSize: 15,
-            height: 1.5,
-            color: context.theme.textTheme.bodyMedium?.color,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Signup
-  Widget _signupText(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8, bottom: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Don't have an account?",
-              style: TextStyle(
-                fontSize: 14,
-                color: context.theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'Register',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: context.theme.colorScheme.primary,
-                ),
-              ),
             ),
           ],
         ),
