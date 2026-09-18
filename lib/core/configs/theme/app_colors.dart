@@ -24,4 +24,10 @@ class AppColors {
 
   static const lightBorder = Color(0xffE2E8F0);
   static const darkBorder = Color(0xff262626);
+
+  static const lightButtonBackground = Color(0xff0F172A);
+  static const lightButtonText = Color(0xffF8FAFC);
+
+  static const darkButtonBackground = Color(0xffF8FAFC);
+  static const darkButtonText = Color(0xff0F172A);
 }
