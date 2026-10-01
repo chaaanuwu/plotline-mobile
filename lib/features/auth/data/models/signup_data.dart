@@ -1,12 +1,12 @@
 class SignupData {
-  final String? firstName;
-  final String? lastName;
-  final String? email;
-  final String? password;
-  final String? dob;
-  final String? gender;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? password;
+  String? dob;
+  String? gender;
 
-  const SignupData({
+  SignupData({
     this.firstName,
     this.lastName,
     this.email,
