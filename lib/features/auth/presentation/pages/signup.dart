@@ -4,7 +4,9 @@ import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/common/widgets/text_field/basic_text_field.dart';
 import 'package:plotline_mobile/core/configs/assets/app_images.dart';
+import 'package:plotline_mobile/features/auth/data/models/signup_data.dart';
 import 'package:plotline_mobile/features/auth/presentation/pages/signin.dart';
+import 'package:plotline_mobile/features/auth/presentation/pages/signup_details.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/auth_header.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/auth_prompt.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/poster_header.dart';
@@ -96,7 +98,24 @@ class _SignupPageState extends State<SignupPage> {
 
             const SizedBox(height: 16),
 
-            BasicAppButton(title: "Continue", onPressed: () {}),
+            BasicAppButton(
+              title: "Continue",
+              onPressed: () {
+                final SignupData signupData = SignupData(
+                  firstName: _firstNameController.text.trim(),
+                  lastName: _lastNameController.text.trim(),
+                  email: _emailController.text.trim(),
+                );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        SignupDetailsPage(signupData: signupData),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
