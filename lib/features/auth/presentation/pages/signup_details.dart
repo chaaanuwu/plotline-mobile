@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plotline_mobile/common/widgets/appbar/app_bar.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/date_picker/date_picker.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/core/configs/assets/app_images.dart';
 import 'package:plotline_mobile/features/auth/data/models/signup_data.dart';
+import 'package:plotline_mobile/features/auth/domain/usecases/signin_usecase.dart';
+import 'package:plotline_mobile/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:plotline_mobile/features/auth/presentation/pages/signup_password.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/auth_header.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/gender_selector.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/poster_header.dart';
+import 'package:plotline_mobile/service_locator.dart';
 
 class SignupDetailsPage extends StatefulWidget {
   final SignupData signupData;
@@ -36,11 +41,12 @@ class _SignupDetailsPageState extends State<SignupDetailsPage> {
     });
 
     if (isDobValid && isGenderValid) {
-      Navigator.push(
-        context,
+      Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (BuildContext context) =>
-              SignupPasswordPage(signupData: widget.signupData),
+          builder: (_) => BlocProvider(
+            create: (_) => AuthBloc(sl<SigninUsecase>(), sl<SignupUsecase>()),
+            child: SignupPasswordPage(signupData: widget.signupData,),
+          ),
         ),
       );
     }
@@ -100,7 +106,10 @@ class _SignupDetailsPageState extends State<SignupDetailsPage> {
 
             const SizedBox(height: 36),
 
-            BasicAppButton(title: Text("Continue"), onPressed: _validateAndContinue),
+            BasicAppButton(
+              title: Text("Continue"),
+              onPressed: _validateAndContinue,
+            ),
           ],
         ),
       ),

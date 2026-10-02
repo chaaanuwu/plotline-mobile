@@ -16,6 +16,7 @@ import 'package:plotline_mobile/features/auth/presentation/pages/signup.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/auth_header.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/auth_prompt.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/poster_header.dart';
+import 'package:plotline_mobile/features/home/presentation/pages/home.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -86,9 +87,15 @@ class _SigninPageState extends State<SigninPage> {
             ),
           );
         } else if (state is SigninSuccess) {
-          // Navigate to home / dashboard upon success
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const HomePage(),
+            ),
+          );
         }
       },
+      
       builder: (context, state) {
         final isLoading = state is AuthLoading;
 

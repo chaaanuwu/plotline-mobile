@@ -1,4 +1,4 @@
-import 'package:plotline_mobile/features/auth/data/models/signup_data.dart';
+
 
 abstract class AuthState {}
 
@@ -12,10 +12,10 @@ class SigninSuccess extends AuthState {
   SigninSuccess(this.data);
 }
 
-class SignupInProgress extends AuthState {
-  final SignupData data;
+class SignupSuccess extends AuthState {
+  final dynamic data;
 
-  SignupInProgress(this.data);
+  SignupSuccess(this.data);
 }
 
 class AuthFailure extends AuthState {
