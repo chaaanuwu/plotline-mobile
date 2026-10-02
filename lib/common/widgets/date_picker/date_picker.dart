@@ -5,12 +5,14 @@ class DatePickerField extends StatefulWidget {
   final String label;
   final DateTime? initialDate;
   final ValueChanged<DateTime> onDateSelected;
+  final String? errorText;
 
   const DatePickerField({
     super.key,
     this.label = 'Date of Birth',
     this.initialDate,
     required this.onDateSelected,
+    this.errorText,
   });
 
   @override
@@ -19,23 +21,17 @@ class DatePickerField extends StatefulWidget {
 
 class _DatePickerFieldState extends State<DatePickerField> {
   DateTime? selectedDate;
-
   final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-
     selectedDate = widget.initialDate;
-
     _controller.text = _formatDate(selectedDate);
   }
 
   String _formatDate(DateTime? date) {
-    if (date == null) {
-      return '';
-    }
-
+    if (date == null) return '';
     return '${date.day.toString().padLeft(2, '0')}/'
         '${date.month.toString().padLeft(2, '0')}/'
         '${date.year}';
@@ -65,8 +61,6 @@ class _DatePickerFieldState extends State<DatePickerField> {
               child: Column(
                 children: [
                   const SizedBox(height: 12),
-
-                  // Drag handle
                   Container(
                     width: 40,
                     height: 4,
@@ -75,9 +69,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   Text(
                     'Select Date',
                     style: theme.textTheme.titleLarge?.copyWith(
@@ -85,9 +77,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
                   Expanded(
                     child: Theme(
                       data: theme.copyWith(
@@ -109,7 +99,6 @@ class _DatePickerFieldState extends State<DatePickerField> {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                     child: SizedBox(
@@ -142,7 +131,6 @@ class _DatePickerFieldState extends State<DatePickerField> {
         selectedDate = pickedDate;
         _controller.text = _formatDate(pickedDate);
       });
-
       widget.onDateSelected(pickedDate);
     }
   }
@@ -171,6 +159,8 @@ class _DatePickerFieldState extends State<DatePickerField> {
       decoration: InputDecoration(
         labelText: widget.label,
         labelStyle: TextStyle(color: textColor),
+        errorText: widget.errorText,
+        helperText: widget.errorText == null ? ' ' : null,
         suffixIcon: Icon(
           Icons.calendar_today_outlined,
           color: textColor,
@@ -193,6 +183,14 @@ class _DatePickerFieldState extends State<DatePickerField> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: colorScheme.error, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: colorScheme.error, width: 1.5),
         ),
         floatingLabelStyle: TextStyle(
           color: colorScheme.primary,

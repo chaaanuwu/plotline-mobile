@@ -14,4 +14,15 @@ class SignupData {
     this.dob,
     this.gender,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'password': password,
+      'dob': dob,
+      'gender': gender,
+    };
+  }
 }

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class GenderSelector extends StatefulWidget {
   final String? initialGender;
   final ValueChanged<String> onGenderSelected;
+  final String? errorText;
 
   const GenderSelector({
     super.key,
     this.initialGender,
     required this.onGenderSelected,
+    this.errorText,
   });
 
   @override
@@ -43,7 +45,6 @@ class _GenderSelectorState extends State<GenderSelector> {
     setState(() {
       selectedGender = gender;
     });
-
     widget.onGenderSelected(gender);
   }
 
@@ -51,6 +52,7 @@ class _GenderSelectorState extends State<GenderSelector> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final hasError = widget.errorText != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +61,7 @@ class _GenderSelectorState extends State<GenderSelector> {
           'Gender',
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
-            color: colorScheme.onSurfaceVariant,
+            color: hasError ? colorScheme.error : colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 16),
@@ -91,10 +93,12 @@ class _GenderSelectorState extends State<GenderSelector> {
                                 width: 3,
                               )
                             : Border.all(
-                                color: colorScheme.outline.withValues(
-                                  alpha: 0.2,
-                                ),
-                                width: 1,
+                                color: hasError
+                                    ? colorScheme.error
+                                    : colorScheme.outline.withValues(
+                                        alpha: 0.2,
+                                      ),
+                                width: hasError ? 1.5 : 1,
                               ),
                         boxShadow: isSelected
                             ? [
@@ -133,6 +137,20 @@ class _GenderSelectorState extends State<GenderSelector> {
               ),
             );
           }).toList(),
+        ),
+
+        // Always reserves space for error message
+        SizedBox(
+          height: 24,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 12, top: 4),
+            child: Text(
+              widget.errorText ?? '',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.error,
+              ),
+            ),
+          ),
         ),
       ],
     );

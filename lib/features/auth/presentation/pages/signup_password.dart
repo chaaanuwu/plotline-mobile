@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
+import 'package:plotline_mobile/common/validators/password_validator.dart';
 import 'package:plotline_mobile/common/widgets/appbar/app_bar.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
@@ -20,16 +21,43 @@ class SignupPasswordPage extends StatefulWidget {
 
 class _SignupPasswordPageState extends State<SignupPasswordPage> {
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+
+  String? _passwordValidationError;
+  String? _confirmPasswordError;
 
   @override
   void dispose() {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _createAccount() {
+    final passwordValidationError = PasswordValidator.validatePassword(
+      _passwordController.text,
+    );
+
+    final passwordValidationMatchError = PasswordValidator.validateMatch(
+      _passwordController.text,
+      _confirmPasswordController.text,
+    );
+
+    setState(() {
+      _passwordValidationError = passwordValidationError;
+      _confirmPasswordError = passwordValidationMatchError;
+    });
+
+    if (passwordValidationError != null ||
+        passwordValidationMatchError != null) {
+      return;
+    }
+
+    widget.signupData.password = _passwordController.text;
   }
 
   @override
@@ -65,6 +93,7 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
               prefixIcon: Icons.lock_outline,
               obscureText: _obscurePassword,
               textInputAction: TextInputAction.done,
+              errorText: _passwordValidationError,
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
@@ -85,16 +114,17 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
               controller: _confirmPasswordController,
               label: 'Confirm Password',
               prefixIcon: Icons.lock_outline,
-              obscureText: _obscurePassword,
+              obscureText: _obscureConfirmPassword,
               textInputAction: TextInputAction.done,
+              errorText: _confirmPasswordError,
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
-                    _obscurePassword = !_obscurePassword;
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
                   });
                 },
                 icon: Icon(
-                  _obscurePassword
+                  _obscureConfirmPassword
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
                 ),
@@ -104,8 +134,8 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
             const SizedBox(height: 16),
 
             BasicAppButton(
-              title: "Create Account",
-              onPressed: () {},
+              title: Text("Create Account"),
+              onPressed: _createAccount,
               backgroundColor: context.theme.colorScheme.primary,
             ),
           ],

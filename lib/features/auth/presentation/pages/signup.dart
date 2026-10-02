@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:plotline_mobile/common/validators/email_validator.dart';
+import 'package:plotline_mobile/common/validators/input_validator.dart';
 import 'package:plotline_mobile/common/widgets/appbar/app_bar.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
@@ -23,12 +25,63 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
+  final FocusNode _firstNameFocus = FocusNode();
+  final FocusNode _lastNameFocus = FocusNode();
+  final FocusNode _emailFocus = FocusNode();
+
+  String? _firstNameValidationError;
+  String? _lastNameValidationError;
+  String? _emailValidationError;
+
   @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
+    _firstNameFocus.dispose();
+    _lastNameFocus.dispose();
+    _emailFocus.dispose();
     super.dispose();
+  }
+
+  void _validateAndSubmit() {
+    final firstNameError = InputValidator.validateFirstName(
+      _firstNameController.text,
+    );
+    final lastNameError = InputValidator.validateLastName(
+      _lastNameController.text,
+    );
+    final emailError = EmailValidator.validate(_emailController.text);
+
+    setState(() {
+      _firstNameValidationError = firstNameError;
+      _lastNameValidationError = lastNameError;
+      _emailValidationError = emailError;
+    });
+
+    if (firstNameError == null && lastNameError == null && emailError == null) {
+      final SignupData signupData = SignupData(
+        firstName: _firstNameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
+        email: _emailController.text.trim(),
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) =>
+              SignupDetailsPage(signupData: signupData),
+        ),
+      );
+    } else {
+      if (firstNameError != null) {
+        _firstNameFocus.requestFocus();
+      } else if (lastNameError != null) {
+        _lastNameFocus.requestFocus();
+      } else if (emailError != null) {
+        _emailFocus.requestFocus();
+      }
+    }
   }
 
   @override
@@ -68,54 +121,58 @@ class _SignupPageState extends State<SignupPage> {
 
             const SizedBox(height: 24),
 
-            // firstname field
+            // Firstname field
             BasicTextField(
               controller: _firstNameController,
+              focusNode: _firstNameFocus,
               label: "First Name",
               prefixIcon: Icons.person_outlined,
               textInputAction: TextInputAction.next,
+              errorText: _firstNameValidationError,
+              onChanged: (_) {
+                if (_firstNameValidationError != null) {
+                  setState(() => _firstNameValidationError = null);
+                }
+              },
             ),
 
             const SizedBox(height: 10),
 
-            // lastname field
+            // Lastname field
             BasicTextField(
               controller: _lastNameController,
+              focusNode: _lastNameFocus,
               label: "Last Name",
               prefixIcon: Icons.person_outlined,
               textInputAction: TextInputAction.next,
+              errorText: _lastNameValidationError,
+              onChanged: (_) {
+                if (_lastNameValidationError != null) {
+                  setState(() => _lastNameValidationError = null);
+                }
+              },
             ),
 
             const SizedBox(height: 10),
 
-            // email field
+            // Email field
             BasicTextField(
               controller: _emailController,
+              focusNode: _emailFocus,
               label: "Email",
               prefixIcon: Icons.email_outlined,
               textInputAction: TextInputAction.done,
+              errorText: _emailValidationError,
+              onChanged: (_) {
+                if (_emailValidationError != null) {
+                  setState(() => _emailValidationError = null);
+                }
+              },
             ),
 
             const SizedBox(height: 16),
 
-            BasicAppButton(
-              title: "Continue",
-              onPressed: () {
-                final SignupData signupData = SignupData(
-                  firstName: _firstNameController.text.trim(),
-                  lastName: _lastNameController.text.trim(),
-                  email: _emailController.text.trim(),
-                );
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        SignupDetailsPage(signupData: signupData),
-                  ),
-                );
-              },
-            ),
+            BasicAppButton(title: Text("Continue"), onPressed: _validateAndSubmit),
           ],
         ),
       ),

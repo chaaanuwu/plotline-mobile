@@ -1,4 +1,4 @@
-class SignipUserReq {
+class SignupUserReq {
   final String firstName;
   final String lastName;
   final String email;
@@ -6,7 +6,7 @@ class SignipUserReq {
   final String dob;
   final String gender;
 
-  SignipUserReq({
+  SignupUserReq({
     required this.firstName,
     required this.lastName,
     required this.email,

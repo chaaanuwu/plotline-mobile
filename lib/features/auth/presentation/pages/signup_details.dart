@@ -10,10 +10,41 @@ import 'package:plotline_mobile/features/auth/presentation/widgets/auth_header.d
 import 'package:plotline_mobile/features/auth/presentation/widgets/gender_selector.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/poster_header.dart';
 
-class SignupDetailsPage extends StatelessWidget {
+class SignupDetailsPage extends StatefulWidget {
   final SignupData signupData;
 
   const SignupDetailsPage({super.key, required this.signupData});
+
+  @override
+  State<SignupDetailsPage> createState() => _SignupDetailsPageState();
+}
+
+class _SignupDetailsPageState extends State<SignupDetailsPage> {
+  String? _dobError;
+  String? _genderError;
+
+  void _validateAndContinue() {
+    final bool isDobValid =
+        widget.signupData.dob != null && widget.signupData.dob!.isNotEmpty;
+    final bool isGenderValid =
+        widget.signupData.gender != null &&
+        widget.signupData.gender!.isNotEmpty;
+
+    setState(() {
+      _dobError = isDobValid ? null : 'Please select your date of birth';
+      _genderError = isGenderValid ? null : 'Please select your gender';
+    });
+
+    if (isDobValid && isGenderValid) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) =>
+              SignupPasswordPage(signupData: widget.signupData),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,34 +75,32 @@ class SignupDetailsPage extends StatelessWidget {
             const SizedBox(height: 24),
 
             DatePickerField(
+              errorText: _dobError,
               onDateSelected: (date) {
-                signupData.dob =
+                widget.signupData.dob =
                     '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+                if (_dobError != null) {
+                  setState(() => _dobError = null);
+                }
               },
             ),
 
             const SizedBox(height: 24),
 
             GenderSelector(
+              errorText: _genderError,
+              initialGender: widget.signupData.gender,
               onGenderSelected: (gender) {
-                signupData.gender = gender;
+                widget.signupData.gender = gender;
+                if (_genderError != null) {
+                  setState(() => _genderError = null);
+                }
               },
             ),
 
             const SizedBox(height: 36),
 
-            BasicAppButton(
-              title: "Continue",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        SignupPasswordPage(signupData: signupData),
-                  ),
-                );
-              },
-            ),
+            BasicAppButton(title: Text("Continue"), onPressed: _validateAndContinue),
           ],
         ),
       ),

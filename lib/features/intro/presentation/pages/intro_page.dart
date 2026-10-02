@@ -212,7 +212,7 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
                         ),
                       );
                     },
-                    title: "Get Started",
+                    title: Text("Get Started"),
                     backgroundColor: context.theme.colorScheme.primary,
                   ),
 
