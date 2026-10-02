@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plotline_mobile/common/widgets/appbar/app_bar.dart';
+import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
+import 'package:plotline_mobile/common/widgets/date_picker/date_picker.dart';
+import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
+import 'package:plotline_mobile/core/configs/assets/app_images.dart';
+import 'package:plotline_mobile/features/auth/data/models/signup_data.dart';
+import 'package:plotline_mobile/features/auth/domain/usecases/signin_usecase.dart';
+import 'package:plotline_mobile/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:plotline_mobile/features/auth/presentation/pages/signup_password.dart';
+import 'package:plotline_mobile/features/auth/presentation/widgets/auth_header.dart';
+import 'package:plotline_mobile/features/auth/presentation/widgets/gender_selector.dart';
+import 'package:plotline_mobile/features/auth/presentation/widgets/poster_header.dart';
+import 'package:plotline_mobile/service_locator.dart';
+
+class SignupDetailsPage extends StatefulWidget {
+  final SignupData signupData;
+
+  const SignupDetailsPage({super.key, required this.signupData});
+
+  @override
+  State<SignupDetailsPage> createState() => _SignupDetailsPageState();
+}
+
+class _SignupDetailsPageState extends State<SignupDetailsPage> {
+  String? _dobError;
+  String? _genderError;
+
+  void _validateAndContinue() {
+    final bool isDobValid =
+        widget.signupData.dob != null && widget.signupData.dob!.isNotEmpty;
+    final bool isGenderValid =
+        widget.signupData.gender != null &&
+        widget.signupData.gender!.isNotEmpty;
+
+    setState(() {
+      _dobError = isDobValid ? null : 'Please select your date of birth';
+      _genderError = isGenderValid ? null : 'Please select your gender';
+    });
+
+    if (isDobValid && isGenderValid) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => AuthBloc(sl<SigninUsecase>(), sl<SignupUsecase>()),
+            child: SignupPasswordPage(signupData: widget.signupData,),
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: BasicAppBar(title: PlotlineLogo()),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(30, 24, 30, 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PosterHeader(
+              posters: [
+                AppImages.poster5,
+                AppImages.poster6,
+                AppImages.poster7,
+                AppImages.poster8,
+              ],
+            ),
+
+            const SizedBox(height: 32),
+
+            AuthHeader(
+              title: "Tell Us About You",
+              subtitle:
+                  "A few details to personalize your PlotLine experience.",
+            ),
+
+            const SizedBox(height: 24),
+
+            DatePickerField(
+              errorText: _dobError,
+              onDateSelected: (date) {
+                widget.signupData.dob =
+                    '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+                if (_dobError != null) {
+                  setState(() => _dobError = null);
+                }
+              },
+            ),
+
+            const SizedBox(height: 24),
+
+            GenderSelector(
+              errorText: _genderError,
+              initialGender: widget.signupData.gender,
+              onGenderSelected: (gender) {
+                widget.signupData.gender = gender;
+                if (_genderError != null) {
+                  setState(() => _genderError = null);
+                }
+              },
+            ),
+
+            const SizedBox(height: 36),
+
+            BasicAppButton(
+              title: Text("Continue"),
+              onPressed: _validateAndContinue,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

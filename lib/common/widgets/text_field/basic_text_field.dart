@@ -12,6 +12,10 @@ class BasicTextField extends StatelessWidget {
   final bool obscureText;
   final bool autocorrect;
   final bool enabled;
+  final String? errorText;
+  final FocusNode? focusNode;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
 
   const BasicTextField({
     super.key,
@@ -25,14 +29,23 @@ class BasicTextField extends StatelessWidget {
     this.obscureText = false,
     this.autocorrect = false,
     this.enabled = true,
+    this.errorText,
+    this.focusNode,
+    this.onChanged,
+    this.onSubmitted,
   });
 
   @override
   Widget build(BuildContext context) {
-    final textColor = context.theme.textTheme.bodyMedium?.color;
+    final theme = context.theme;
+    final colorScheme = theme.colorScheme;
+    final textColor = theme.textTheme.bodyMedium?.color;
 
     return TextField(
       controller: controller,
+      focusNode: focusNode,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
       obscureText: obscureText,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
@@ -42,13 +55,15 @@ class BasicTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         hintText: hintText,
+        errorText: errorText,
+        helperText: errorText == null ? ' ' : null,
         labelStyle: TextStyle(color: textColor),
         prefixIcon: prefixIcon != null
             ? Icon(prefixIcon, color: textColor)
             : null,
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: context.theme.colorScheme.surfaceContainerHighest,
+        fillColor: colorScheme.surfaceContainerHighest,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 19,
@@ -63,13 +78,18 @@ class BasicTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
-            color: context.theme.colorScheme.primary,
-            width: 1.5,
-          ),
+          borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: colorScheme.error, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: colorScheme.error, width: 1.5),
         ),
         floatingLabelStyle: TextStyle(
-          color: context.theme.colorScheme.primary,
+          color: colorScheme.primary,
           fontWeight: FontWeight.w600,
         ),
       ),

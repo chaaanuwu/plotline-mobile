@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class BasicAppButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String title;
+  final Widget title;
   final double? height;
   final Color? textColor;
   final Color? backgroundColor;
@@ -29,7 +29,7 @@ class BasicAppButton extends StatelessWidget {
         foregroundColor: textColor,
         side: borderColor != null ? BorderSide(color: borderColor!) : null,
       ),
-      child: Text(title),
+      child: title,
     );
   }
 }
