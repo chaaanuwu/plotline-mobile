@@ -43,9 +43,4 @@ class AuthRepositoryImpl extends AuthRepository {
       },
     );
   }
-
-  @override
-  Future<Either> signup(SignupUserReq signupUserReq) async {
-    return await sl<AuthRemoteDataSource>().signup(signupUserReq);
-  }
 }
