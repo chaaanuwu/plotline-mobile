@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
+import 'package:plotline_mobile/features/auth/data/sources/auth_local_data_source.dart';
+import 'package:plotline_mobile/features/home/presentation/pages/home.dart';
 import 'package:plotline_mobile/features/intro/presentation/pages/intro_page.dart';
+import 'package:plotline_mobile/service_locator.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -19,6 +22,7 @@ class _SplashPageState extends State<SplashPage>
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
@@ -47,18 +51,26 @@ class _SplashPageState extends State<SplashPage>
 
     _animationController.forward();
 
-    Future.delayed(const Duration(milliseconds: 2200), () {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const IntroPage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              FadeTransition(opacity: animation, child: child),
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
-      );
-    });
+    _checkAuthAndNavigate();
+  }
+
+  Future<void> _checkAuthAndNavigate() async {
+    await Future.delayed(const Duration(milliseconds: 2200));
+
+    final auth = await sl<AuthLocalDataSource>().getAuth();
+
+    if (!mounted) return;
+
+    final nextPage = auth != null ? const HomePage() : const IntroPage();
+
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => nextPage,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            FadeTransition(opacity: animation, child: child),
+        transitionDuration: const Duration(milliseconds: 400),
+      ),
+    );
   }
 
   @override

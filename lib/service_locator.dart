@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:plotline_mobile/core/network/api_client.dart';
 import 'package:plotline_mobile/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:plotline_mobile/features/auth/data/sources/auth_local_data_source.dart';
 import 'package:plotline_mobile/features/auth/data/sources/auth_remote_data_source.dart';
 import 'package:plotline_mobile/features/auth/domain/repository/auth_repository.dart';
 import 'package:plotline_mobile/features/auth/domain/usecases/signin_usecase.dart';
@@ -16,4 +17,6 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   sl.registerLazySingleton<SigninUsecase>(() => SigninUsecase());
   sl.registerLazySingleton<SignupUsecase>(() => SignupUsecase());
+
+  sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource());
 }
