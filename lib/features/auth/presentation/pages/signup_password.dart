@@ -14,7 +14,7 @@ import 'package:plotline_mobile/features/auth/presentation/bloc/auth_event.dart'
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_state.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/auth_header.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/poster_header.dart';
-import 'package:plotline_mobile/features/home/presentation/pages/home.dart';
+import 'package:plotline_mobile/features/main_page.dart';
 
 class SignupPasswordPage extends StatefulWidget {
   final SignupData signupData;
@@ -93,7 +93,7 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => const HomePage(),
+              builder: (BuildContext context) => const MainPage(),
             ),
           );
         }

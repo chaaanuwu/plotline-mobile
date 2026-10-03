@@ -16,7 +16,7 @@ import 'package:plotline_mobile/features/auth/presentation/pages/signup.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/auth_header.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/auth_prompt.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/poster_header.dart';
-import 'package:plotline_mobile/features/home/presentation/pages/home.dart';
+import 'package:plotline_mobile/features/main_page.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -90,7 +90,7 @@ class _SigninPageState extends State<SigninPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => const HomePage(),
+              builder: (BuildContext context) => const MainPage(),
             ),
           );
         }
