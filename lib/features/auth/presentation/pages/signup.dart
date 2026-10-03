@@ -5,7 +5,7 @@ import 'package:plotline_mobile/common/widgets/appbar/app_bar.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/common/widgets/text_field/basic_text_field.dart';
-import 'package:plotline_mobile/core/configs/assets/app_images.dart';
+import 'package:plotline_mobile/core/configs/assets/app_posters.dart';
 import 'package:plotline_mobile/features/auth/data/models/signup_data.dart';
 import 'package:plotline_mobile/features/auth/presentation/pages/signin.dart';
 import 'package:plotline_mobile/features/auth/presentation/pages/signup_details.dart';
@@ -105,10 +105,10 @@ class _SignupPageState extends State<SignupPage> {
           children: [
             const PosterHeader(
               posters: [
-                AppImages.poster1,
-                AppImages.poster2,
-                AppImages.poster3,
-                AppImages.poster4,
+                AppPosters.poster1,
+                AppPosters.poster2,
+                AppPosters.poster3,
+                AppPosters.poster4,
               ],
             ),
 
