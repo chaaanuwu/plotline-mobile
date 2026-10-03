@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/features/auth/data/sources/auth_local_data_source.dart';
-import 'package:plotline_mobile/features/home/presentation/pages/home.dart';
 import 'package:plotline_mobile/features/intro/presentation/pages/intro_page.dart';
+import 'package:plotline_mobile/features/main_page.dart';
 import 'package:plotline_mobile/service_locator.dart';
 
 class SplashPage extends StatefulWidget {
@@ -61,7 +61,7 @@ class _SplashPageState extends State<SplashPage>
 
     if (!mounted) return;
 
-    final nextPage = auth != null ? const HomePage() : const IntroPage();
+    final nextPage = auth != null ? const MainPage() : const IntroPage();
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
