@@ -6,7 +6,7 @@ import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/common/widgets/text_field/basic_text_field.dart';
 import 'package:plotline_mobile/core/configs/assets/app_posters.dart';
-import 'package:plotline_mobile/features/auth/data/models/signup_data.dart';
+import 'package:plotline_mobile/features/auth/presentation/models/signup_data.dart';
 import 'package:plotline_mobile/features/auth/presentation/pages/signin.dart';
 import 'package:plotline_mobile/features/auth/presentation/pages/signup_details.dart';
 import 'package:plotline_mobile/features/auth/presentation/widgets/auth_header.dart';
@@ -172,7 +172,10 @@ class _SignupPageState extends State<SignupPage> {
 
             const SizedBox(height: 16),
 
-            BasicAppButton(title: Text("Continue"), onPressed: _validateAndSubmit),
+            BasicAppButton(
+              title: Text("Continue"),
+              onPressed: _validateAndSubmit,
+            ),
           ],
         ),
       ),

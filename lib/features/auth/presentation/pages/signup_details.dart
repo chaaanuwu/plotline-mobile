@@ -5,7 +5,7 @@ import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/date_picker/date_picker.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/core/configs/assets/app_posters.dart';
-import 'package:plotline_mobile/features/auth/data/models/signup_data.dart';
+import 'package:plotline_mobile/features/auth/presentation/models/signup_data.dart';
 import 'package:plotline_mobile/features/auth/domain/usecases/signin_usecase.dart';
 import 'package:plotline_mobile/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
@@ -44,8 +44,11 @@ class _SignupDetailsPageState extends State<SignupDetailsPage> {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => AuthBloc(sl<SigninUsecase>(), sl<SignupUsecase>()),
-            child: SignupPasswordPage(signupData: widget.signupData,),
+            create: (_) => AuthBloc(
+              signinUsecase: sl<SigninUsecase>(),
+              signupUsecase: sl<SignupUsecase>(),
+            ),
+            child: SignupPasswordPage(signupData: widget.signupData),
           ),
         ),
       );

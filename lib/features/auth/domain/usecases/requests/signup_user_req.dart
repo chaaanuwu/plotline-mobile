@@ -6,7 +6,7 @@ class SignupUserReq {
   final String dob;
   final String gender;
 
-  SignupUserReq({
+  const SignupUserReq({
     required this.firstName,
     required this.lastName,
     required this.email,

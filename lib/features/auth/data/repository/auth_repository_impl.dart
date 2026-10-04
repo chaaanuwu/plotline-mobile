@@ -1,45 +1,42 @@
 import 'package:dartz/dartz.dart';
-import 'package:plotline_mobile/features/auth/data/models/auth_model.dart';
-import 'package:plotline_mobile/features/auth/data/models/signin_user_req.dart';
-import 'package:plotline_mobile/features/auth/data/models/signup_user_req.dart';
 import 'package:plotline_mobile/features/auth/data/sources/auth_local_data_source.dart';
 import 'package:plotline_mobile/features/auth/data/sources/auth_remote_data_source.dart';
+import 'package:plotline_mobile/features/auth/domain/entity/auth_entity.dart';
 import 'package:plotline_mobile/features/auth/domain/repository/auth_repository.dart';
-import 'package:plotline_mobile/service_locator.dart';
+import 'package:plotline_mobile/features/auth/domain/usecases/requests/signin_user_req.dart';
+import 'package:plotline_mobile/features/auth/domain/usecases/requests/signup_user_req.dart';
 
-class AuthRepositoryImpl extends AuthRepository {
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
+
+  const AuthRepositoryImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+  });
+
   @override
-  Future<Either> signin(SigninUserReq signinUserReq) async {
-    final result = await sl<AuthRemoteDataSource>().signin(signinUserReq);
+  Future<Either<String, AuthEntity>> signin(SigninUserReq request) async {
+    final result = await remoteDataSource.signin(request);
 
-    return await result.fold(
-      (error) {
-        return Left(error);
-      },
-      (data) async {
-        final authModel = AuthModel.fromJson(data['data']);
-        
-        await sl<AuthLocalDataSource>().saveAuth(authModel);
-
-        return Right(authModel);
+    return await result.fold<Future<Either<String, AuthEntity>>>(
+      (error) async => Left<String, AuthEntity>(error),
+      (authModel) async {
+        await localDataSource.saveAuth(authModel);
+        return Right<String, AuthEntity>(authModel);
       },
     );
   }
 
   @override
-  Future<Either> signup(SignupUserReq signupUserReq) async {
-    final result = await sl<AuthRemoteDataSource>().signup(signupUserReq);
+  Future<Either<String, AuthEntity>> signup(SignupUserReq request) async {
+    final result = await remoteDataSource.signup(request);
 
-    return await result.fold(
-      (error) {
-        return Left(error);
-      },
-      (data) async {
-        final authModel = AuthModel.fromJson(data['data']);
-
-        await sl<AuthLocalDataSource>().saveAuth(authModel);
-
-        return Right(authModel);
+    return await result.fold<Future<Either<String, AuthEntity>>>(
+      (error) async => Left<String, AuthEntity>(error),
+      (authModel) async {
+        await localDataSource.saveAuth(authModel);
+        return Right<String, AuthEntity>(authModel);
       },
     );
   }

@@ -1,12 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:plotline_mobile/core/usecase/usecase.dart';
-import 'package:plotline_mobile/features/auth/data/models/signin_user_req.dart';
+import 'package:plotline_mobile/features/auth/domain/entity/auth_entity.dart';
 import 'package:plotline_mobile/features/auth/domain/repository/auth_repository.dart';
-import 'package:plotline_mobile/service_locator.dart';
+import 'package:plotline_mobile/features/auth/domain/usecases/requests/signin_user_req.dart';
 
-class SigninUsecase implements UseCase<Either, SigninUserReq> {
+class SigninUsecase
+    implements UseCase<Either<String, AuthEntity>, SigninUserReq> {
+  final AuthRepository repository;
+
+  const SigninUsecase(this.repository);
+
   @override
-  Future<Either<dynamic, dynamic>> call(SigninUserReq params) {
-    return sl<AuthRepository>().signin(params);
+  Future<Either<String, AuthEntity>> call(SigninUserReq params) {
+    return repository.signin(params);
   }
 }

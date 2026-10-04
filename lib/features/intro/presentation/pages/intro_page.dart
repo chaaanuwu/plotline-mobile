@@ -5,8 +5,6 @@ import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/core/configs/assets/app_posters.dart';
 import 'package:plotline_mobile/core/configs/theme/app_colors.dart';
-import 'package:plotline_mobile/features/auth/domain/usecases/signin_usecase.dart';
-import 'package:plotline_mobile/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:plotline_mobile/features/auth/presentation/pages/signin.dart';
 import 'package:plotline_mobile/features/intro/presentation/widgets/marquee_column.dart';
@@ -207,13 +205,13 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => BlocProvider(
-                            create: (_) => AuthBloc(sl<SigninUsecase>(), sl<SignupUsecase>()),
+                            create: (_) => sl<AuthBloc>(),
                             child: const SigninPage(),
                           ),
                         ),
                       );
                     },
-                    title: Text("Get Started"),
+                    title: const Text("Get Started"),
                     backgroundColor: context.theme.colorScheme.primary,
                   ),
 
