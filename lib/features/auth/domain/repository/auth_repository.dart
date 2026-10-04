@@ -7,4 +7,8 @@ abstract class AuthRepository {
   Future<Either<String, AuthEntity>> signin(SigninUserReq request);
 
   Future<Either<String, AuthEntity>> signup(SignupUserReq request);
+
+  Future<Either<String, AuthEntity?>> getSavedAuth();
+
+  Future<Either<String, void>> removeSavedAuth();
 }

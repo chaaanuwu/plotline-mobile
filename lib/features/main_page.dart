@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plotline_mobile/common/widgets/bottom_navigation_bar/plotline_bottom_navbar.dart';
 import 'package:plotline_mobile/features/home/presentation/pages/home_page.dart';
 import 'package:plotline_mobile/features/movies/presentation/pages/movies_page.dart';
+import 'package:plotline_mobile/features/profile/presentation/bloc/profile_cubit.dart';
 import 'package:plotline_mobile/features/profile/presentation/pages/profile_page.dart';
 import 'package:plotline_mobile/features/search/presentation/pages/search_page.dart';
+import 'package:plotline_mobile/service_locator.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -19,13 +22,27 @@ class _MainPageState extends State<MainPage> {
     const HomePage(),
     const SearchPage(),
     const MoviesPage(),
-    const ProfilePage(),
+
+    BlocProvider(
+      create: (_) => sl<ProfileCubit>()..loadProfile(),
+      child: const ProfilePage(),
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        child: KeyedSubtree(
+          key: ValueKey(_currentIndex),
+          child: _pages[_currentIndex],
+        ),
+      ),
+
       bottomNavigationBar: PlotlineBottomNavBar(
         currentIndex: _currentIndex,
         onItemSelected: (index) {

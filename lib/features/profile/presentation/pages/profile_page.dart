@@ -1,21 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plotline_mobile/core/configs/assets/app_images.dart';
+import 'package:plotline_mobile/features/profile/presentation/bloc/profile_cubit.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  @override
   Widget build(BuildContext context) {
+    final auth = context.watch<ProfileCubit>().state;
+    final cover = auth?.user.cover;
+    final pfp = auth?.user.pfp;
+
     return Scaffold(
-      body: Center(
-        child: Text(
-          "Profile Page",
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
+      body: Column(
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 220,
+                child: cover == null || cover.isEmpty
+                    ? Image.asset(AppImages.plotlineCover, fit: BoxFit.cover)
+                    : Image.network(cover, fit: BoxFit.cover),
+              ),
+
+              Positioned(
+                bottom: -75,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: CircleAvatar(
+                    radius: 75,
+                    backgroundImage: pfp == '' || pfp == null
+                        ? const AssetImage(AppImages.defaultpfp)
+                        : NetworkImage(pfp),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 90),
+
+          Text(
+            '${auth?.user.firstName ?? ''} '
+            '${auth?.user.lastName ?? ''}',
+            style: Theme.of(context).textTheme.headlineLarge,
+          ),
+        ],
       ),
     );
   }

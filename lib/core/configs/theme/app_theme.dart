@@ -17,7 +17,7 @@ class AppTheme {
 
     textTheme: TextTheme(
       bodyLarge: TextStyle(color: AppColors.lightMainText),
-      bodyMedium: TextStyle(color: AppColors.lightSecondaryText),
+      bodyMedium: TextStyle(color: AppColors.lightSecondaryText, fontWeight: FontWeight.bold),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -45,7 +45,7 @@ class AppTheme {
 
     textTheme: TextTheme(
       bodyLarge: TextStyle(color: AppColors.darkMainText),
-      bodyMedium: TextStyle(color: AppColors.darkSecondaryText),
+      bodyMedium: TextStyle(color: AppColors.darkSecondaryText, fontWeight: FontWeight.bold),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(

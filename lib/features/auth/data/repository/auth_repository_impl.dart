@@ -40,4 +40,30 @@ class AuthRepositoryImpl implements AuthRepository {
       },
     );
   }
+
+  @override
+  Future<Either<String, AuthEntity?>> getSavedAuth() async {
+    try {
+      final auth = await localDataSource.getAuth();
+
+      if (auth == null) {
+        return const Right<String, AuthEntity?>(null);
+      }
+
+      return Right<String, AuthEntity?>(auth);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, void>> removeSavedAuth() async {
+    try {
+      await localDataSource.removeAuth();
+      
+      return const Right(null);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
 }
