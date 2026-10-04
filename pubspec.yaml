@@ -27,4 +27,5 @@ flutter:
 
   assets:
     - assets/images/posters/
+    - assets/images/app_images/
     - .env

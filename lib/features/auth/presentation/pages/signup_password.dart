@@ -6,9 +6,9 @@ import 'package:plotline_mobile/common/widgets/appbar/app_bar.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
 import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/common/widgets/text_field/basic_text_field.dart';
-import 'package:plotline_mobile/core/configs/assets/app_images.dart';
-import 'package:plotline_mobile/features/auth/data/models/signup_data.dart';
-import 'package:plotline_mobile/features/auth/data/models/signup_user_req.dart';
+import 'package:plotline_mobile/core/configs/assets/app_posters.dart';
+import 'package:plotline_mobile/features/auth/presentation/models/signup_data.dart';
+import 'package:plotline_mobile/features/auth/domain/usecases/requests/signup_user_req.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_event.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_state.dart';
@@ -98,7 +98,7 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
           );
         }
       },
-      
+
       builder: (context, state) {
         final isLoading = state is AuthLoading;
 
@@ -111,10 +111,10 @@ class _SignupPasswordPageState extends State<SignupPasswordPage> {
               children: [
                 PosterHeader(
                   posters: [
-                    AppImages.poster9,
-                    AppImages.poster10,
-                    AppImages.poster11,
-                    AppImages.poster12,
+                    AppPosters.poster9,
+                    AppPosters.poster10,
+                    AppPosters.poster11,
+                    AppPosters.poster12,
                   ],
                 ),
 
