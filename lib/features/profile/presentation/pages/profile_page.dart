@@ -8,9 +8,22 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<ProfileCubit>().state;
-    final cover = auth?.user.cover;
-    final pfp = auth?.user.pfp;
+    final profileData = context.watch<ProfileCubit>().state;
+
+    print('PROFILE DATA: $profileData');
+
+    if (profileData != null) {
+      print('USER ID: ${profileData.user.userId}');
+      print('FIRST NAME: ${profileData.user.firstName}');
+      print('LAST NAME: ${profileData.user.lastName}');
+      print('AVATAR: ${profileData.user.avatarUrl}');
+      print('COVER: ${profileData.user.coverUrl}');
+      print('FOLLOWERS: ${profileData.followersCount}');
+      print('FOLLOWING: ${profileData.followingCount}');
+    }
+
+    final avatar = profileData?.user.avatarUrl;
+    final cover = profileData?.user.coverUrl;
 
     return Scaffold(
       body: Column(
@@ -33,9 +46,9 @@ class ProfilePage extends StatelessWidget {
                 child: Center(
                   child: CircleAvatar(
                     radius: 75,
-                    backgroundImage: pfp == '' || pfp == null
+                    backgroundImage: avatar == '' || avatar == null
                         ? const AssetImage(AppImages.defaultpfp)
-                        : NetworkImage(pfp),
+                        : NetworkImage(avatar),
                   ),
                 ),
               ),
@@ -45,8 +58,8 @@ class ProfilePage extends StatelessWidget {
           const SizedBox(height: 90),
 
           Text(
-            '${auth?.user.firstName ?? ''} '
-            '${auth?.user.lastName ?? ''}',
+            '${profileData?.user.firstName ?? ''} '
+            '${profileData?.user.lastName ?? ''}',
             style: Theme.of(context).textTheme.headlineLarge,
           ),
         ],

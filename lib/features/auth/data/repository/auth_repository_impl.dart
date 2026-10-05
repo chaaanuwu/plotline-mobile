@@ -60,7 +60,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<String, void>> removeSavedAuth() async {
     try {
       await localDataSource.removeAuth();
-      
+
       return const Right(null);
     } catch (e) {
       return Left(e.toString());

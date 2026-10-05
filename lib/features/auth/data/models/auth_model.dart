@@ -1,8 +1,7 @@
-import 'package:plotline_mobile/features/auth/data/models/user_model.dart';
 import 'package:plotline_mobile/features/auth/domain/entity/auth_entity.dart';
 
 class AuthModel extends AuthEntity {
-  const AuthModel({required super.token, required UserModel super.user});
+  const AuthModel({required super.token, required super.userId});
 
   factory AuthModel.fromJson(Map<String, dynamic> json) {
     final userJson = json['user'];
@@ -15,11 +14,11 @@ class AuthModel extends AuthEntity {
 
     return AuthModel(
       token: json['token']?.toString() ?? '',
-      user: UserModel.fromJson(Map<String, dynamic>.from(userJson)),
+      userId: userJson['_id']?.toString() ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'token': token, 'user': (user as UserModel).toJson()};
+    return {'token': token, 'userId': userId};
   }
 }
