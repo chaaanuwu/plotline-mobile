@@ -18,19 +18,32 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomePage(),
-    const SearchPage(),
-    const MoviesPage(),
+  late final ProfileCubit _profileCubit;
 
-    BlocProvider(
-      create: (_) => sl<ProfileCubit>()..loadProfile(),
-      child: const ProfilePage(),
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+
+    _profileCubit = sl<ProfileCubit>();
+    _profileCubit.loadProfile();
+  }
+
+  @override
+  void dispose() {
+    _profileCubit.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      const HomePage(),
+      const SearchPage(),
+      const MoviesPage(),
+
+      BlocProvider.value(value: _profileCubit, child: const ProfilePage()),
+    ];
+
     return Scaffold(
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
@@ -39,10 +52,9 @@ class _MainPageState extends State<MainPage> {
         },
         child: KeyedSubtree(
           key: ValueKey(_currentIndex),
-          child: _pages[_currentIndex],
+          child: pages[_currentIndex],
         ),
       ),
-
       bottomNavigationBar: PlotlineBottomNavBar(
         currentIndex: _currentIndex,
         onItemSelected: (index) {
