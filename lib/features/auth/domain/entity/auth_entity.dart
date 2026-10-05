@@ -1,8 +1,6 @@
-import 'user_entity.dart';
-
 class AuthEntity {
   final String token;
-  final UserEntity user;
+  final String userId;
 
-  const AuthEntity({required this.token, required this.user});
+  const AuthEntity({required this.token, required this.userId});
 }
