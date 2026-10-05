@@ -3,8 +3,8 @@ import 'package:plotline_mobile/features/auth/data/sources/auth_local_data_sourc
 import 'package:plotline_mobile/features/auth/data/sources/auth_remote_data_source.dart';
 import 'package:plotline_mobile/features/auth/domain/entity/auth_entity.dart';
 import 'package:plotline_mobile/features/auth/domain/repository/auth_repository.dart';
-import 'package:plotline_mobile/features/auth/domain/usecases/requests/signin_user_req.dart';
-import 'package:plotline_mobile/features/auth/domain/usecases/requests/signup_user_req.dart';
+import 'package:plotline_mobile/features/auth/data/requests/signin_user_req.dart';
+import 'package:plotline_mobile/features/auth/data/requests/signup_user_req.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;

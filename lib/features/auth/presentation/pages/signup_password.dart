@@ -8,7 +8,7 @@ import 'package:plotline_mobile/common/widgets/logo/plotline_logo.dart';
 import 'package:plotline_mobile/common/widgets/text_field/basic_text_field.dart';
 import 'package:plotline_mobile/core/configs/assets/app_posters.dart';
 import 'package:plotline_mobile/features/auth/presentation/models/signup_data.dart';
-import 'package:plotline_mobile/features/auth/domain/usecases/requests/signup_user_req.dart';
+import 'package:plotline_mobile/features/auth/data/requests/signup_user_req.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_event.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_state.dart';

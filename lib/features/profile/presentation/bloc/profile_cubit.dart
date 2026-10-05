@@ -9,25 +9,15 @@ class ProfileCubit extends Cubit<ProfileEntity?> {
   ProfileCubit({required this.getMeUseCase}) : super(null);
 
   Future<void> loadProfile() async {
-    print('PROFILE: loadProfile() called');
-
     final result = await getMeUseCase(NoParams());
 
-    print('PROFILE: GetMeUseCase completed');
-
     result.fold(
-  (error) {
-    print('PROFILE ERROR: $error');
-    emit(null);
-  },
-  (profile) {
-    print('PROFILE SUCCESS: $profile');
-    print('PROFILE USER: ${profile?.user.firstName}');
-    print('PROFILE AVATAR: ${profile?.user.avatarUrl}');
-    print('PROFILE FOLLOWERS: ${profile?.followersCount}');
-
-    emit(profile);
-  },
-);
+      (error) {
+        emit(null);
+      },
+      (profile) {
+        emit(profile);
+      },
+    );
   }
 }

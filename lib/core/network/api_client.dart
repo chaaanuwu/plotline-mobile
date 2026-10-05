@@ -36,12 +36,10 @@ class ApiClient {
 
                   if (token != null && token.isNotEmpty) {
                     options.headers['Authorization'] = 'Bearer $token';
-
-                    print('API: Token attached');
                   }
                 }
               } catch (e) {
-                print('API: Failed to read auth token: $e');
+                throw Exception('Invalid auth data');
               }
             }
           }
