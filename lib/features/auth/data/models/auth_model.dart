@@ -4,17 +4,9 @@ class AuthModel extends AuthEntity {
   const AuthModel({required super.token, required super.userId});
 
   factory AuthModel.fromJson(Map<String, dynamic> json) {
-    final userJson = json['user'];
-
-    if (userJson is! Map) {
-      throw const FormatException(
-        'Invalid authentication response: user is missing.',
-      );
-    }
-
     return AuthModel(
       token: json['token']?.toString() ?? '',
-      userId: userJson['_id']?.toString() ?? '',
+      userId: json['userId']?.toString() ?? '',
     );
   }
 

@@ -1,6 +1,5 @@
 /// Temporary form state used while the multi-step signup flow is in progress.
-/// This is presentation state, not an API/data model, so it intentionally
-/// lives in the presentation layer.
+/// This is presentation state, not an API/data model, so it intentionally lives in the presentation layer.
 class SignupData {
   String? firstName;
   String? lastName;

@@ -10,18 +10,6 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final profileData = context.watch<ProfileCubit>().state;
 
-    print('PROFILE DATA: $profileData');
-
-    if (profileData != null) {
-      print('USER ID: ${profileData.user.userId}');
-      print('FIRST NAME: ${profileData.user.firstName}');
-      print('LAST NAME: ${profileData.user.lastName}');
-      print('AVATAR: ${profileData.user.avatarUrl}');
-      print('COVER: ${profileData.user.coverUrl}');
-      print('FOLLOWERS: ${profileData.followersCount}');
-      print('FOLLOWING: ${profileData.followingCount}');
-    }
-
     final avatar = profileData?.user.avatarUrl;
     final cover = profileData?.user.coverUrl;
 
@@ -46,7 +34,7 @@ class ProfilePage extends StatelessWidget {
                 child: Center(
                   child: CircleAvatar(
                     radius: 75,
-                    backgroundImage: avatar == '' || avatar == null
+                    backgroundImage: avatar == null || avatar.isEmpty
                         ? const AssetImage(AppImages.defaultpfp)
                         : NetworkImage(avatar),
                   ),

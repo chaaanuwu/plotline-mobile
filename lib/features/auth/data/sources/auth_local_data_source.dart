@@ -15,19 +15,11 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   static const String _authKey = 'auth_data';
 
   @override
-Future<void> saveAuth(AuthModel auth) async {
-  final prefs = await SharedPreferences.getInstance();
+  Future<void> saveAuth(AuthModel auth) async {
+    final prefs = await SharedPreferences.getInstance();
 
-  print('AUTH: Saving token: ${auth.token}');
-  print('AUTH: Saving userId: ${auth.userId}');
-
-  await prefs.setString(
-    _authKey,
-    jsonEncode(auth.toJson()),
-  );
-
-  print('AUTH: Saved data: ${prefs.getString(_authKey)}');
-}
+    await prefs.setString(_authKey, jsonEncode(auth.toJson()));
+  }
 
   @override
   Future<AuthModel?> getAuth() async {

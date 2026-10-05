@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:plotline_mobile/core/configs/api/api_endpoints.dart';
 import 'package:plotline_mobile/core/network/api_client.dart';
 import 'package:plotline_mobile/features/auth/data/models/auth_model.dart';
-import 'package:plotline_mobile/features/auth/domain/usecases/requests/signin_user_req.dart';
-import 'package:plotline_mobile/features/auth/domain/usecases/requests/signup_user_req.dart';
+import 'package:plotline_mobile/features/auth/data/requests/signin_user_req.dart';
+import 'package:plotline_mobile/features/auth/data/requests/signup_user_req.dart';
 
 abstract class AuthRemoteDataSource {
   Future<Either<String, AuthModel>> signin(SigninUserReq request);
