@@ -36,31 +36,43 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final pages = [
-      const HomePage(),
-      const SearchPage(),
-      const MoviesPage(),
+    return BlocProvider.value(
+      value: _profileCubit,
+      child: Builder(
+        builder: (context) {
+          final profileData = context.watch<ProfileCubit>().state;
 
-      BlocProvider.value(value: _profileCubit, child: const ProfilePage()),
-    ];
+          final avatar = profileData?.user.avatarUrl;
 
-    return Scaffold(
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        transitionBuilder: (child, animation) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        child: KeyedSubtree(
-          key: ValueKey(_currentIndex),
-          child: pages[_currentIndex],
-        ),
-      ),
-      bottomNavigationBar: PlotlineBottomNavBar(
-        currentIndex: _currentIndex,
-        onItemSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          final pages = [
+            const HomePage(),
+            const SearchPage(),
+            const MoviesPage(),
+            const ProfilePage(),
+          ];
+
+          return Scaffold(
+            body: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              child: KeyedSubtree(
+                key: ValueKey(_currentIndex),
+                child: pages[_currentIndex],
+              ),
+            ),
+
+            bottomNavigationBar: PlotlineBottomNavBar(
+              currentIndex: _currentIndex,
+              avatarUrl: avatar,
+              onItemSelected: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+            ),
+          );
         },
       ),
     );
