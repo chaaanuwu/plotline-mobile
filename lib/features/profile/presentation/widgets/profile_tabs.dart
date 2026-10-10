@@ -122,7 +122,7 @@ class _ProfileTabsState extends State<ProfileTabs>
             itemCount: state.reviews.length,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemBuilder: (context, index) {
-              final review = state.reviews[index];
+              // final review = state.reviews[index];
 
               return ReviewCard();
             },

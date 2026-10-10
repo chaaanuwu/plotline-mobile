@@ -200,9 +200,12 @@ class _ReviewItem extends StatelessWidget {
                           SizedBox(
                             width: 88,
                             height: 126,
-
                             child: PosterCard(
-                              posterPath: movie.posterPath,
+                              posterPath:
+                                  movie.posterPath == null ||
+                                      movie.posterPath.isEmpty
+                                  ? AppImages.popcornCup
+                                  : '${ImageConfig.tmdbPosterBaseUrl}${movie.posterPath}',
                               height: 126,
                               spacing: 0,
                             ),
