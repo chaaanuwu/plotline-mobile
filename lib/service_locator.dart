@@ -16,6 +16,7 @@ import 'package:plotline_mobile/features/profile/presentation/bloc/profile_cubit
 import 'package:plotline_mobile/features/reviews/data/repository/review_repository_impl.dart';
 import 'package:plotline_mobile/features/reviews/data/sources/review_remote_data_source.dart';
 import 'package:plotline_mobile/features/reviews/domain/repository/review_repository.dart';
+import 'package:plotline_mobile/features/reviews/domain/usecase/get_feed_reviews_usecase.dart';
 import 'package:plotline_mobile/features/reviews/domain/usecase/get_my_reviews_usecase.dart';
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -129,8 +130,16 @@ Future<void> initializeDependencies() async {
     () => GetMyReviewsUsecase(repository: sl<ReviewRepository>()),
   );
 
+  // REVIEW - USE CASES
+  sl.registerLazySingleton<GetFeedReviewsUsecase>(
+    () => GetFeedReviewsUsecase(repository: sl<ReviewRepository>()),
+  );
+
   // REVIEW - PRESENTATION(WIDGET)
   sl.registerFactory<ReviewCubit>(
-    () => ReviewCubit(getMyReviewsUsecase: sl<GetMyReviewsUsecase>()),
+    () => ReviewCubit(
+      getMyReviewsUsecase: sl<GetMyReviewsUsecase>(),
+      getFeedReviewsUsecase: sl<GetFeedReviewsUsecase>(),
+    ),
   );
 }
