@@ -9,4 +9,7 @@ class ApiEndpoints {
 
   // PROFILE - ME
   static final String userMeProfile = "$baseUrl/profile/me";
+
+  // REVIEWS - ME
+  static final String myReviews = "$baseUrl/reviews";
 }

@@ -13,6 +13,11 @@ import 'package:plotline_mobile/features/profile/data/sources/profile_remote_dat
 import 'package:plotline_mobile/features/profile/domain/repository/profile_repository.dart';
 import 'package:plotline_mobile/features/profile/domain/usecase/get_me_use_case.dart';
 import 'package:plotline_mobile/features/profile/presentation/bloc/profile_cubit.dart';
+import 'package:plotline_mobile/features/reviews/data/repository/review_repository_impl.dart';
+import 'package:plotline_mobile/features/reviews/data/sources/review_remote_data_source.dart';
+import 'package:plotline_mobile/features/reviews/domain/repository/review_repository.dart';
+import 'package:plotline_mobile/features/reviews/domain/usecase/get_my_reviews_usecase.dart';
+import 'package:plotline_mobile/features/reviews/presentation/cubit/review_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // GetIt service locator
@@ -104,8 +109,28 @@ Future<void> initializeDependencies() async {
   // Factory is used because a new ProfileCubit should be created
   // whenever a new ProfileCubit provider is created.
   sl.registerFactory<ProfileCubit>(
-    () => ProfileCubit(
-      getMeUseCase: sl<GetMeUseCase>(),
-    ),
+    () => ProfileCubit(getMeUseCase: sl<GetMeUseCase>()),
+  );
+
+  // REVIEWS
+
+  // REVIEW DATASOURCE
+  sl.registerLazySingleton<ReviewRemoteDataSource>(
+    () => ReviewRemoteDataSourceImpl(apiClient: sl<ApiClient>()),
+  );
+
+  // REVIEW - REPOSITORY
+  sl.registerLazySingleton<ReviewRepository>(
+    () => ReviewRepositoryImpl(remoteDataSource: sl<ReviewRemoteDataSource>()),
+  );
+
+  // REVIEW - USE CASES
+  sl.registerLazySingleton<GetMyReviewsUsecase>(
+    () => GetMyReviewsUsecase(repository: sl<ReviewRepository>()),
+  );
+
+  // REVIEW - PRESENTATION(WIDGET)
+  sl.registerFactory<ReviewCubit>(
+    () => ReviewCubit(getMyReviewsUsecase: sl<GetMyReviewsUsecase>()),
   );
 }
