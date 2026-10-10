@@ -50,6 +50,7 @@ class ReviewCard extends StatelessWidget {
 
     return ListView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: reviews.length,
       itemBuilder: (context, index) {

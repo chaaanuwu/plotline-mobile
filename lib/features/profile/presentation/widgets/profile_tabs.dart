@@ -119,12 +119,12 @@ class _ProfileTabsState extends State<ProfileTabs>
           }
 
           return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: state.reviews.length,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemBuilder: (context, index) {
-              // final review = state.reviews[index];
-
-              return ReviewCard();
+              return const ReviewCard();
             },
           );
         }
