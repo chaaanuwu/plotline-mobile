@@ -14,6 +14,8 @@ class PosterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isNetwork = posterPath.startsWith('http');
+
     return Padding(
       padding: EdgeInsets.only(bottom: spacing),
       child: ClipRRect(
@@ -21,23 +23,25 @@ class PosterCard extends StatelessWidget {
         child: SizedBox(
           height: height,
           width: double.infinity,
-          child: Image.asset(
-            posterPath,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey[900],
-                child: Center(
-                  child: Icon(
-                    Icons.movie_rounded,
-                    color: Colors.grey[800],
-                    size: 32,
-                  ),
-                ),
-              );
-            },
-          ),
+          child: isNetwork
+              ? Image.network(
+                  posterPath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return _buildErrorFallback();
+                  },
+                )
+              : Image.asset(posterPath, fit: BoxFit.cover),
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorFallback() {
+    return Container(
+      color: Colors.grey[900],
+      child: Center(
+        child: Icon(Icons.movie_rounded, color: Colors.grey[800], size: 32),
       ),
     );
   }
