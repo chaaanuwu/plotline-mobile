@@ -38,8 +38,8 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
       }
 
       return Left('Failed to fetch reviews');
-    // } catch (error) {
-    //   return Left(error.toString());
+      // } catch (error) {
+      //   return Left(error.toString());
     } catch (e, stackTrace) {
       debugPrint('Reviews API failed: $e');
       debugPrintStack(stackTrace: stackTrace);
