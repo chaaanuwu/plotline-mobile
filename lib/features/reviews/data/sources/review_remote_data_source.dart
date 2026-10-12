@@ -6,6 +6,8 @@ import 'package:plotline_mobile/features/reviews/data/models/review_model.dart';
 
 abstract class ReviewRemoteDataSource {
   Future<Either<String, List<ReviewModel>>> getMyReviews();
+
+  Future<Either<String, List<ReviewModel>>> getFeedReviews();
 }
 
 class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
@@ -36,12 +38,37 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
       }
 
       return Left('Failed to fetch reviews');
-    // } catch (error) {
-    //   return Left(error.toString());
+      // } catch (error) {
+      //   return Left(error.toString());
     } catch (e, stackTrace) {
       debugPrint('Reviews API failed: $e');
       debugPrintStack(stackTrace: stackTrace);
       rethrow;
+    }
+  }
+
+  @override
+  Future<Either<String, List<ReviewModel>>> getFeedReviews() async {
+    try {
+      final response = await apiClient.dio.get(ApiEndpoints.feedReviews);
+
+      if (response.statusCode == 200) {
+        final reviews = response.data['feed'] as List<dynamic>;
+
+        return Right(
+          reviews
+              .map(
+                (review) => ReviewModel.fromJson(
+                  Map<String, dynamic>.from(review as Map),
+                ),
+              )
+              .toList(),
+        );
+      }
+
+      return Left('Failed to fetch reviews');
+    } catch (e) {
+      return Left(e.toString());
     }
   }
 }
