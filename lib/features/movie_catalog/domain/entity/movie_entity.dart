@@ -1,6 +1,6 @@
 class MovieEntity {
   final String movieId;
-  final String tmdbId;
+  final int tmdbId;
   final String title;
   final String originalTitle;
   final bool adult;

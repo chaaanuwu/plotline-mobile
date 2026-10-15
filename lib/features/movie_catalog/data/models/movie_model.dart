@@ -24,13 +24,13 @@ class MovieModel extends MovieEntity {
       title: json['title'],
       originalTitle: json['originalTitle'],
       adult: json['adult'],
-      genres: List<String>.from(json['genres'] ?? []),
+      genres: List<String>.from(json['genreNames'] ?? []),
       originalLanguage: json['originalLanguage'],
       overview: json['overview'],
       releaseDate: json['releaseDate'],
       posterPath: json['posterPath'],
       backdropPath: json['backdropPath'],
-      voteAverage: json['voteAverage'],
+      voteAverage: (json['voteAverage'] as num).toDouble(),
       voteCount: json['voteCount'],
     );
   }

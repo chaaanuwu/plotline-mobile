@@ -4,13 +4,13 @@ import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entit
 import 'package:plotline_mobile/features/movie_catalog/domain/repository/movie_catalog_repository.dart';
 
 class MovieCatalogRepositoryImpl implements MovieCatalogRepository {
-  final MovieCatalogRemoteDataSource dataSource;
+  final MovieCatalogRemoteDataSource remoteDataSource;
 
-  MovieCatalogRepositoryImpl({required this.dataSource});
+  MovieCatalogRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<Either<String, List<MovieEntity>>> getTrendingMovies() async {
-    final result = await dataSource.getTmdbTrendingMovies();
+    final result = await remoteDataSource.getTmdbTrendingMovies();
 
     return result.fold(
       (error) async => Left<String, List<MovieEntity>>(error),
