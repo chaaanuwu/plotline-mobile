@@ -7,6 +7,9 @@ class ApiEndpoints {
   static final String signinUrl = "$baseUrl/auth/sign-in";
   static final String signupUrl = "$baseUrl/auth/sign-up";
 
+  // MOVIES
+  static final String trendingMovies = "$baseUrl/tmdb/trending";
+
   // PROFILE - ME
   static final String userMeProfile = "$baseUrl/profile/me";
 

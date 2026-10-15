@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plotline_mobile/common/widgets/bottom_navigation_bar/plotline_bottom_navbar.dart';
 import 'package:plotline_mobile/features/home/presentation/pages/home_page.dart';
+import 'package:plotline_mobile/features/movies/presentation/cubit/movies_cubit.dart';
 import 'package:plotline_mobile/features/movies/presentation/pages/movies_page.dart';
 import 'package:plotline_mobile/features/profile/presentation/bloc/profile_cubit.dart';
 import 'package:plotline_mobile/features/profile/presentation/pages/profile_page.dart';
@@ -47,7 +48,12 @@ class _MainPageState extends State<MainPage> {
           final pages = [
             const HomePage(),
             const SearchPage(),
-            const MoviesPage(),
+
+            BlocProvider(
+              create: (context) => sl<MoviesCubit>()..getTrendingMovies(),
+              child: const MoviesPage(),
+            ),
+
             const ProfilePage(),
           ];
 

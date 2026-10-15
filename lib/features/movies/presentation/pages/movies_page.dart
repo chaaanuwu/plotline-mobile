@@ -1,4 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plotline_mobile/features/movies/presentation/cubit/movies_cubit.dart';
+import 'package:plotline_mobile/features/movies/presentation/cubit/movies_state.dart';
+import 'package:plotline_mobile/features/movies/presentation/widgets/movies_hero_section.dart';
+import 'package:plotline_mobile/features/movies/presentation/widgets/trending_section.dart';
 
 class MoviesPage extends StatefulWidget {
   const MoviesPage({super.key});
@@ -11,7 +18,36 @@ class _MoviesPageState extends State<MoviesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("Movies Page", style: Theme.of(context).textTheme.headlineMedium,)),
+      body: BlocBuilder<MoviesCubit, MoviesState>(
+        builder: (context, state) {
+          if (state is MoviesLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is MoviesError) {
+            return Center(child: Text(state.message));
+          }
+
+          if (state is MoviesLoaded) {
+            final trendingMovies = state.trendingMovies;
+
+            final randomIndex = Random().nextInt(trendingMovies.length);
+
+            final randomMovie = trendingMovies[randomIndex];
+
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  MoviesHeroSection(featuredMovie: randomMovie),
+                  TrendingSection(trendingMovies: trendingMovies),
+                ],
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
     );
   }
 }

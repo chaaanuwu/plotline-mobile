@@ -8,6 +8,11 @@ import 'package:plotline_mobile/features/auth/domain/usecases/get_saved_auth.dar
 import 'package:plotline_mobile/features/auth/domain/usecases/signin_usecase.dart';
 import 'package:plotline_mobile/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:plotline_mobile/features/movie_catalog/data/repository/movie_catalog_repository_impl.dart';
+import 'package:plotline_mobile/features/movie_catalog/data/sources/movie_catalog_remote_data_source.dart';
+import 'package:plotline_mobile/features/movie_catalog/domain/repository/movie_catalog_repository.dart';
+import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_trending_movies_usecase.dart';
+import 'package:plotline_mobile/features/movies/presentation/cubit/movies_cubit.dart';
 import 'package:plotline_mobile/features/profile/data/repository/profile_repository_impl.dart';
 import 'package:plotline_mobile/features/profile/data/sources/profile_remote_data_source.dart';
 import 'package:plotline_mobile/features/profile/domain/repository/profile_repository.dart';
@@ -141,5 +146,29 @@ Future<void> initializeDependencies() async {
       getMyReviewsUsecase: sl<GetMyReviewsUsecase>(),
       getFeedReviewsUsecase: sl<GetFeedReviewsUsecase>(),
     ),
+  );
+
+  // MOVIES
+
+  // MOVIE - DATASOURCE
+  sl.registerLazySingleton<MovieCatalogRemoteDataSource>(
+    () => MovieCatalogRemoteDataSourceImpl(apiClient: sl<ApiClient>()),
+  );
+
+  // MOVIES - REPOSITORY
+  sl.registerLazySingleton<MovieCatalogRepository>(
+    () => MovieCatalogRepositoryImpl(
+      remoteDataSource: sl<MovieCatalogRemoteDataSource>(),
+    ),
+  );
+
+  // MOVIES - USE CASES
+  sl.registerLazySingleton<GetTrendingMoviesUsecase>(
+    () => GetTrendingMoviesUsecase(repository: sl<MovieCatalogRepository>()),
+  );
+
+  // MOVIES - PRESENTATION(WIDGET)
+  sl.registerFactory<MoviesCubit>(
+    () => MoviesCubit(getTrendingMoviesUsecase: sl<GetTrendingMoviesUsecase>()),
   );
 }
