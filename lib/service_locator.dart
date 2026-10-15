@@ -11,6 +11,7 @@ import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/repository/movie_catalog_repository_impl.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/sources/movie_catalog_remote_data_source.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/repository/movie_catalog_repository.dart';
+import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_top_rated_movies_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_trending_movies_usecase.dart';
 import 'package:plotline_mobile/features/movies/presentation/cubit/movies_cubit.dart';
 import 'package:plotline_mobile/features/profile/data/repository/profile_repository_impl.dart';
@@ -167,8 +168,15 @@ Future<void> initializeDependencies() async {
     () => GetTrendingMoviesUsecase(repository: sl<MovieCatalogRepository>()),
   );
 
+  sl.registerLazySingleton<GetTopRatedMoviesUsecase>(
+    () => GetTopRatedMoviesUsecase(repository: sl<MovieCatalogRepository>()),
+  );
+
   // MOVIES - PRESENTATION(WIDGET)
   sl.registerFactory<MoviesCubit>(
-    () => MoviesCubit(getTrendingMoviesUsecase: sl<GetTrendingMoviesUsecase>()),
+    () => MoviesCubit(
+      getTrendingMoviesUsecase: sl<GetTrendingMoviesUsecase>(),
+      getTopRatedMoviesUsecase: sl<GetTopRatedMoviesUsecase>(),
+    ),
   );
 }

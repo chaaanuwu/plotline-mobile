@@ -50,7 +50,12 @@ class _MainPageState extends State<MainPage> {
             const SearchPage(),
 
             BlocProvider(
-              create: (context) => sl<MoviesCubit>()..getTrendingMovies(),
+              create: (context) {
+                final moviesCubit = sl<MoviesCubit>();
+                moviesCubit.getTrendingMovies();
+                moviesCubit.getTopRatedMovies();
+                return moviesCubit;
+              },
               child: const MoviesPage(),
             ),
 
