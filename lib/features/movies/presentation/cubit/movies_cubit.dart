@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:plotline_mobile/core/usecase/usecase.dart';
+import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entity.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_top_rated_movies_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_trending_movies_usecase.dart';
 import 'package:plotline_mobile/features/movies/presentation/cubit/movies_state.dart';
@@ -14,39 +15,53 @@ class MoviesCubit extends Cubit<MoviesState> {
     required this.getTopRatedMoviesUsecase,
   }) : super(MoviesInitial());
 
-  Future<void> getTrendingMovies() async {
+  Future<void> getMovieCatalog() async {
     emit(MoviesLoading());
 
-    final result = await getTrendingMoviesUsecase(NoParams());
+    final results = await Future.wait([
+      getTrendingMoviesUsecase(NoParams()),
+      getTopRatedMoviesUsecase(NoParams()),
+    ]);
 
-    result.fold(
+    final trendingResult = results[0];
+    final topRatedResult = results[1];
+
+    List<MovieEntity> trendingMovies = [];
+    List<MovieEntity> topRatedMovies = [];
+    bool trendingFailed = false;
+    bool topRatedFailed = false;
+
+    trendingResult.fold(
       (failure) {
         debugPrint('Trending API failed: $failure');
-        emit(MoviesError(failure));
+        trendingFailed = true;
       },
       (movies) {
-        debugPrint('Trending movie count: ${movies.length}');
-        debugPrint('Trending movies: $movies');
-        emit(MoviesLoaded(movies));
+        trendingMovies = movies;
       },
     );
-  }
 
-  Future<void> getTopRatedMovies() async {
-    emit(MoviesLoading());
-
-    final result = await getTrendingMoviesUsecase(NoParams());
-
-    result.fold(
+    topRatedResult.fold(
       (failure) {
         debugPrint('Top Rated API failed: $failure');
-        emit(MoviesError(failure));
+        topRatedFailed = true;
       },
       (movies) {
-        debugPrint('Top Rated movie count: ${movies.length}');
-        debugPrint('Top Rated movies: $movies');
-        emit(MoviesLoaded(movies));
+        topRatedMovies = movies;
       },
     );
+
+    if (trendingFailed && topRatedFailed) {
+      trendingResult.fold(
+        (failure) => emit(MoviesError(failure)),
+        (_) {},
+      );
+      return;
+    }
+
+    emit(MoviesLoaded(
+      trendingMovies: trendingMovies,
+      topRatedMovies: topRatedMovies,
+    ));
   }
 }
