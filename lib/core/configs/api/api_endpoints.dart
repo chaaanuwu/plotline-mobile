@@ -9,6 +9,7 @@ class ApiEndpoints {
 
   // MOVIES
   static final String trendingMovies = "$baseUrl/tmdb/trending";
+  static final String topRatedMovies = "$baseUrl/tmdb/top-rated";
 
   // PROFILE - ME
   static final String userMeProfile = "$baseUrl/profile/me";

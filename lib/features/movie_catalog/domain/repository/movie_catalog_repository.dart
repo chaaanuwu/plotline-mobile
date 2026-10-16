@@ -3,4 +3,6 @@ import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entit
 
 abstract class MovieCatalogRepository {
   Future<Either<String, List<MovieEntity>>> getTrendingMovies();
+
+  Future<Either<String, List<MovieEntity>>> getTopRatedMovies();
 }
