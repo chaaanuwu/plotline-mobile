@@ -1,12 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plotline_mobile/features/movies/presentation/cubit/movies_cubit.dart';
 import 'package:plotline_mobile/features/movies/presentation/cubit/movies_state.dart';
-import 'package:plotline_mobile/features/movies/presentation/widgets/movies_hero_section.dart';
-import 'package:plotline_mobile/features/movies/presentation/widgets/top_rated_section.dart';
-import 'package:plotline_mobile/features/movies/presentation/widgets/trending_section.dart';
+import 'package:plotline_mobile/features/movies/presentation/widgets/movies/movies_hero_section.dart';
+import 'package:plotline_mobile/features/movies/presentation/widgets/movies/top_rated_section.dart';
+import 'package:plotline_mobile/features/movies/presentation/widgets/movies/trending_section.dart';
 
 class MoviesPage extends StatefulWidget {
   const MoviesPage({super.key});

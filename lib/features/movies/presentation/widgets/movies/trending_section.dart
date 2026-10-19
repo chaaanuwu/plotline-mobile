@@ -3,6 +3,7 @@ import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/common/widgets/movie_poster/movie_card.dart';
 import 'package:plotline_mobile/core/configs/urls/image_config.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entity.dart';
+import 'package:plotline_mobile/features/movies/presentation/pages/movie_details_page.dart';
 
 class TrendingSection extends StatelessWidget {
   final List<MovieEntity> trendingMovies;
@@ -56,7 +57,15 @@ class TrendingSection extends StatelessWidget {
                     title: trendingMovies[index].title,
                     trendingRank: index + 1,
                     voteAverage: trendingMovies[index].voteAverage,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              MovieDetailsPage(movie: trendingMovies[index]),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

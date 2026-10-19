@@ -5,6 +5,7 @@ import 'package:plotline_mobile/common/widgets/pill/pill.dart';
 import 'package:plotline_mobile/core/configs/assets/app_images.dart';
 import 'package:plotline_mobile/core/configs/urls/image_config.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entity.dart';
+import 'package:plotline_mobile/features/movies/presentation/pages/movie_details_page.dart';
 
 class MoviesHeroSection extends StatelessWidget {
   final MovieEntity featuredMovie;
@@ -83,15 +84,25 @@ class MoviesHeroSection extends StatelessWidget {
               const SizedBox(height: 8),
 
               // Title
-              Text(
-                featuredMovie.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.5,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MovieDetailsPage(movie: featuredMovie),
+                    ),
+                  );
+                },
+                child: Text(
+                  featuredMovie.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
 
