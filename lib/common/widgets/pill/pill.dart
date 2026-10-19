@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Pill extends StatelessWidget {
   final String text;
   final IconData? preIcon;
-  final Color iconColor;
+  final Color? iconColor;
   final Color backgroundColor;
   final Color textColor;
   final Color borderColor;
@@ -17,7 +17,7 @@ class Pill extends StatelessWidget {
     required this.textColor,
     required this.borderColor,
     required this.borderRadius,
-    required this.iconColor,
+    this.iconColor,
   });
 
   @override
@@ -33,11 +33,7 @@ class Pill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (preIcon != null) ...[
-            Icon(
-              preIcon!,
-              color: iconColor,
-              size: 14, 
-            ),
+            Icon(preIcon!, color: iconColor, size: 14),
             const SizedBox(width: 4),
           ],
           Text(
