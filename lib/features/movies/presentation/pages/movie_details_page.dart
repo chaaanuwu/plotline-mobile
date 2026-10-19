@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entity.dart';
+import 'package:plotline_mobile/features/movies/presentation/widgets/movie_details/community_reviews_section.dart';
 import 'package:plotline_mobile/features/movies/presentation/widgets/movie_details/movie_backdrop.dart';
 import 'package:plotline_mobile/features/movies/presentation/widgets/movie_details/movie_details_actions.dart';
 import 'package:plotline_mobile/features/movies/presentation/widgets/movie_details/movie_details_header.dart';
@@ -10,10 +11,7 @@ import 'package:plotline_mobile/features/movies/presentation/widgets/movie_detai
 class MovieDetailsPage extends StatelessWidget {
   final MovieEntity movie;
 
-  const MovieDetailsPage({
-    super.key,
-    required this.movie,
-  });
+  const MovieDetailsPage({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +27,7 @@ class MovieDetailsPage extends StatelessWidget {
         child: Stack(
           children: [
             // Backdrop, gradient, and back button
-            MovieBackdrop(
-              movie: movie,
-              height: backdropHeight,
-            ),
+            MovieBackdrop(movie: movie, height: backdropHeight),
 
             // Main movie content
             Padding(
@@ -57,11 +52,7 @@ class MovieDetailsPage extends StatelessWidget {
                       const SizedBox(height: 14),
 
                       // Year, rating, language, and details
-                      MovieMetadataRow(
-                        movie: movie,
-                        onDetailsTap: () {
-                        },
-                      ),
+                      MovieMetadataRow(movie: movie, onDetailsTap: () {}),
 
                       const SizedBox(height: 12),
 
@@ -77,6 +68,10 @@ class MovieDetailsPage extends StatelessWidget {
 
                       // Movie overview
                       MovieOverviewSection(movie: movie),
+
+                      const SizedBox(height: 32),
+
+                      CommunityReviewsSection(),
                     ],
                   ),
                 ),
