@@ -9,12 +9,20 @@ import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entit
 class MovieBackdrop extends StatelessWidget {
   final MovieEntity movie;
   final double height;
+  final VoidCallback? onSetProfileCover;
 
-  const MovieBackdrop({super.key, required this.movie, required this.height});
+  const MovieBackdrop({
+    super.key,
+    required this.movie,
+    required this.height,
+    this.onSetProfileCover,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
+
+    final topInset = MediaQuery.paddingOf(context).top + 24;
 
     return SizedBox(
       width: double.infinity,
@@ -57,31 +65,64 @@ class MovieBackdrop extends StatelessWidget {
 
           // Back button
           Positioned(
-            top: MediaQuery.paddingOf(context).top + 24,
+            top: topInset,
             left: 16,
-            child: GestureDetector(
+            child: _BackdropActionButton(
+              icon: LucideIcons.arrowLeft,
+              tooltip: 'Go back',
               onTap: () => Navigator.of(context).maybePop(),
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.45),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.15),
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: const Icon(
-                  LucideIcons.arrowLeft,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
+            ),
+          ),
+
+          // Set as profile cover
+          Positioned(
+            top: topInset,
+            right: 16,
+            child: _BackdropActionButton(
+              icon: LucideIcons.image,
+              tooltip: 'Set as profile cover',
+              onTap: onSetProfileCover,
+              iconColor: const Color(0xFFF59E0B),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _BackdropActionButton extends StatelessWidget {
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback? onTap;
+  final Color iconColor;
+
+  const _BackdropActionButton({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+    this.iconColor = Colors.white,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: Colors.black.withValues(alpha: 0.50),
+        shape: CircleBorder(
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.18)),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          customBorder: const CircleBorder(),
+          child: SizedBox(
+            width: 44,
+            height: 44,
+            child: Icon(icon, color: iconColor, size: 21),
+          ),
+        ),
       ),
     );
   }

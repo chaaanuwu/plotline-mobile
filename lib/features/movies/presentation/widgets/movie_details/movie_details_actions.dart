@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
+import 'package:plotline_mobile/core/configs/theme/app_colors.dart';
 
 class MovieDetailsActions extends StatelessWidget {
   final VoidCallback? onMarkWatched;
@@ -19,9 +20,6 @@ class MovieDetailsActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = context.theme.colorScheme.primary;
     final secondaryColor = context.theme.colorScheme.secondary;
-
-    final secondaryBackground = secondaryColor.withValues(alpha: 0.15);
-    final secondaryBorder = secondaryColor.withValues(alpha: 0.4);
 
     return Column(
       children: [
@@ -61,9 +59,9 @@ class MovieDetailsActions extends StatelessWidget {
               child: BasicAppButton(
                 onPressed: onToggleWatchlist ?? () {},
                 height: 52,
-                backgroundColor: secondaryBackground,
-                textColor: secondaryColor,
-                borderColor: secondaryBorder,
+                backgroundColor: AppColors.accentColor.withValues(alpha: 0.15),
+                textColor: AppColors.accentColor,
+                borderColor: AppColors.accentColor.withValues(alpha: 0.4),
                 title: const Icon(LucideIcons.bookmark, size: 23),
               ),
             ),
@@ -77,9 +75,9 @@ class MovieDetailsActions extends StatelessWidget {
           child: BasicAppButton(
             onPressed: onWriteReview ?? () {},
             height: 52,
-            backgroundColor: secondaryBackground,
+            backgroundColor: secondaryColor.withValues(alpha: 0.15),
             textColor: secondaryColor,
-            borderColor: secondaryBorder,
+            borderColor: secondaryColor.withValues(alpha: 0.4),
             title: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
