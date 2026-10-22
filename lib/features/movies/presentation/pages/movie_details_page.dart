@@ -52,7 +52,7 @@ class MovieDetailsPage extends StatelessWidget {
                       const SizedBox(height: 14),
 
                       // Year, rating, language, and details
-                      MovieMetadataRow(movie: movie, onDetailsTap: () {}),
+                      MovieMetadataRow(movie: movie),
 
                       const SizedBox(height: 12),
 

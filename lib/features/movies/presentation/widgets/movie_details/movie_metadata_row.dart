@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entity.dart';
+import 'package:plotline_mobile/features/movies/presentation/widgets/movie_details/movie_info_bottom_sheet.dart';
 
 class MovieMetadataRow extends StatelessWidget {
   final MovieEntity movie;
-  final VoidCallback? onDetailsTap;
 
-  const MovieMetadataRow({super.key, required this.movie, this.onDetailsTap});
+  const MovieMetadataRow({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,16 @@ class MovieMetadataRow extends StatelessWidget {
         const SizedBox(width: 12),
 
         GestureDetector(
-          onTap: onDetailsTap,
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) {
+                return MovieInfoBottomSheet(movie: movie);
+              },
+            );
+          },
           behavior: HitTestBehavior.opaque,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
