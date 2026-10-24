@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/core/configs/assets/app_images.dart';
 
 class PlotlineBottomNavBar extends StatelessWidget {
@@ -13,166 +15,238 @@ class PlotlineBottomNavBar extends StatelessWidget {
     required this.onItemSelected,
   });
 
+  static const _items = [
+    (LucideIcons.house, 'Home'),
+    (LucideIcons.search, 'Search'),
+    (LucideIcons.clapperboard, 'Movies'),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final items = [
-      (Icons.home_outlined, Icons.home, 'Home'),
-      (Icons.search_outlined, Icons.search, 'Search'),
-      (Icons.movie_outlined, Icons.movie, 'Movies'),
-    ];
+    final _activeColor = context.theme.colorScheme.primary;
+    final barColor = isDark ? const Color(0xFF0A0A0A) : colorScheme.surface;
+
+    final inactiveColor = colorScheme.onSurface.withValues(alpha: 0.52);
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      height: 70,
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 8,
+        color: barColor,
+        border: Border(
+          top: BorderSide(color: colorScheme.onSurface.withValues(alpha: 0.08)),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ...List.generate(
-              items.length,
-              (index) {
-                final isSelected = currentIndex == index;
-
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 64,
+          child: Row(
+            children: [
+              ...List.generate(_items.length, (index) {
                 return Expanded(
-                  child: GestureDetector(
+                  child: _NavItem(
+                    icon: _items[index].$1,
+                    label: _items[index].$2,
+                    isSelected: currentIndex == index,
+                    activeColor: _activeColor,
+                    inactiveColor: inactiveColor,
                     onTap: () => onItemSelected(index),
-                    behavior: HitTestBehavior.opaque,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOutCubic,
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? colorScheme.primary.withValues(alpha: 0.12)
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            transitionBuilder: (child, animation) {
-                              return ScaleTransition(
-                                scale: animation,
-                                child: child,
-                              );
-                            },
-                            child: Icon(
-                              isSelected ? items[index].$2 : items[index].$1,
-                              key: ValueKey(isSelected),
-                              size: 25,
-                              color: isSelected
-                                  ? colorScheme.primary
-                                  : colorScheme.onSurface.withValues(
-                                      alpha: 0.55,
-                                    ),
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 200),
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: isSelected
-                                  ? FontWeight.w600
-                                  : FontWeight.w500,
-                              color: isSelected
-                                  ? colorScheme.primary
-                                  : colorScheme.onSurface.withValues(
-                                      alpha: 0.55,
-                                    ),
-                            ),
-                            child: Text(items[index].$3),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
                 );
-              },
-            ),
+              }),
 
-            Expanded(
-              child: GestureDetector(
-                onTap: () => onItemSelected(3),
-                behavior: HitTestBehavior.opaque,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeOutCubic,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+              Expanded(
+                child: _ProfileNavItem(
+                  avatarUrl: avatarUrl,
+                  isSelected: currentIndex == 3,
+                  activeColor: _activeColor,
+                  inactiveColor: inactiveColor,
+                  onTap: () => onItemSelected(3),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final Color activeColor;
+  final Color inactiveColor;
+  final VoidCallback onTap;
+
+  const _NavItem({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isSelected ? activeColor : inactiveColor;
+
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      label: label,
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          height: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Active indicator
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                width: isSelected ? 18 : 0,
+                height: 3,
+                margin: const EdgeInsets.only(bottom: 6),
+                decoration: BoxDecoration(
+                  color: isSelected ? activeColor : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+
+              // Icon
+              AnimatedScale(
+                scale: isSelected ? 1.04 : 1.0,
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOut,
+                child: Icon(icon, size: 23, color: color),
+              ),
+
+              const SizedBox(height: 4),
+
+              // Label
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOut,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  letterSpacing: 0.1,
+                ),
+                child: Text(label),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileNavItem extends StatelessWidget {
+  final String? avatarUrl;
+  final bool isSelected;
+  final Color activeColor;
+  final Color inactiveColor;
+  final VoidCallback onTap;
+
+  const _ProfileNavItem({
+    required this.avatarUrl,
+    required this.isSelected,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isSelected ? activeColor : inactiveColor;
+
+    final ImageProvider avatarImage = avatarUrl != null && avatarUrl!.isNotEmpty
+        ? NetworkImage(avatarUrl!)
+        : const AssetImage(AppImages.defaultpfp);
+
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      label: 'Profile',
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          height: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Active indicator
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                width: isSelected ? 18 : 0,
+                height: 3,
+                margin: const EdgeInsets.only(bottom: 6),
+                decoration: BoxDecoration(
+                  color: isSelected ? activeColor : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+
+              // Profile avatar
+              AnimatedScale(
+                scale: isSelected ? 1.04 : 1.0,
+                duration: const Duration(milliseconds: 180),
+                child: Container(
+                  width: 25,
+                  height: 25,
+                  padding: const EdgeInsets.all(1.5),
                   decoration: BoxDecoration(
-                    color: currentIndex == 3
-                        ? colorScheme.primary.withValues(alpha: 0.12)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(18),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected
+                          ? activeColor
+                          : inactiveColor.withValues(alpha: 0.55),
+                      width: isSelected ? 1.6 : 1,
+                    ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AnimatedScale(
-                        scale: currentIndex == 3 ? 1.08 : 1.0,
-                        duration: const Duration(milliseconds: 200),
-                        child: Container(
-                          width: 27,
-                          height: 27,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: currentIndex == 3
-                                ? Border.all(
-                                    color: colorScheme.primary,
-                                    width: 2,
-                                  )
-                                : null,
-                          ),
-                          child: CircleAvatar(
-                            radius: 13.5,
-                            backgroundImage:
-                                avatarUrl == null || avatarUrl!.isEmpty
-                                    ? const AssetImage(AppImages.defaultpfp)
-                                    : NetworkImage(avatarUrl!),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 200),
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: currentIndex == 3
-                              ? FontWeight.w600
-                              : FontWeight.w500,
-                          color: currentIndex == 3
-                              ? colorScheme.primary
-                              : colorScheme.onSurface.withValues(
-                                  alpha: 0.55,
-                                ),
-                        ),
-                        child: const Text('Profile'),
-                      ),
-                    ],
+                  child: ClipOval(
+                    child: Image(
+                      image: avatarImage,
+                      width: 22,
+                      height: 22,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          AppImages.defaultpfp,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 4),
+
+              // Label
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOut,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  letterSpacing: 0.1,
+                ),
+                child: const Text('Profile'),
+              ),
+            ],
+          ),
         ),
       ),
     );

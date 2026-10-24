@@ -4,7 +4,7 @@ import 'package:plotline_mobile/core/usecase/usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entity.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_top_rated_movies_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_trending_movies_usecase.dart';
-import 'package:plotline_mobile/features/movies/presentation/cubit/movies_state.dart';
+import 'package:plotline_mobile/features/movies/presentation/cubit/movies/movies_state.dart';
 
 class MoviesCubit extends Cubit<MoviesState> {
   final GetTrendingMoviesUsecase getTrendingMoviesUsecase;

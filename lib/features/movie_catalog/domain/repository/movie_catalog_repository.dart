@@ -5,4 +5,6 @@ abstract class MovieCatalogRepository {
   Future<Either<String, List<MovieEntity>>> getTrendingMovies();
 
   Future<Either<String, List<MovieEntity>>> getTopRatedMovies();
+
+  Future<Either<String, Unit>> updateProfileCover(String backdropPath);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BasicAppButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Widget title;
   final double? height;
   final Color? textColor;
@@ -10,7 +10,7 @@ class BasicAppButton extends StatelessWidget {
 
   const BasicAppButton({
     super.key,
-    required this.onPressed,
+    this.onPressed,
     required this.title,
     this.height,
     this.textColor,

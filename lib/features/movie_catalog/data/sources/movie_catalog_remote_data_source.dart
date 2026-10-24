@@ -7,6 +7,8 @@ abstract class MovieCatalogRemoteDataSource {
   Future<Either<String, List<MovieModel>>> getTmdbTrendingMovies();
 
   Future<Either<String, List<MovieModel>>> getTopRatedMovies();
+
+  Future<Either<String, Unit>> updateProfileCover(String backdropPath);
 }
 
 class MovieCatalogRemoteDataSourceImpl implements MovieCatalogRemoteDataSource {
@@ -57,8 +59,26 @@ class MovieCatalogRemoteDataSourceImpl implements MovieCatalogRemoteDataSource {
               .toList(),
         );
       }
-      
+
       return Left("Failed to fetch top-rated movies.");
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, Unit>> updateProfileCover(String backdropPath) async {
+    try {
+      final response = await apiClient.dio.put(
+        ApiEndpoints.editProfile,
+        data: {'cover': backdropPath},
+      );
+
+      if (response.statusCode == 200) {
+        return Right(unit);
+      }
+
+      return Left('Failed to update profile cover');
     } catch (e) {
       return Left(e.toString());
     }

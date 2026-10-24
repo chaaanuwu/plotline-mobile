@@ -27,4 +27,14 @@ class MovieCatalogRepositoryImpl implements MovieCatalogRepository {
       (movies) async => Right<String, List<MovieEntity>>(movies),
     );
   }
+
+  @override
+  Future<Either<String, Unit>> updateProfileCover(String backdropPath) async {
+    final result = await remoteDataSource.updateProfileCover(backdropPath);
+
+    return result.fold(
+      (error) => Left<String, Unit>(error),
+      (unit) => Right<String, Unit>(unit),
+    );
+  }
 }

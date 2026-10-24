@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/common/widgets/movie_poster/movie_card.dart';
 import 'package:plotline_mobile/core/configs/urls/image_config.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entity.dart';
+import 'package:plotline_mobile/features/movies/presentation/cubit/movie_details/movie_details_cubit.dart';
 import 'package:plotline_mobile/features/movies/presentation/pages/movie_details_page.dart';
 
 class TopRatedSection extends StatelessWidget {
@@ -51,8 +53,14 @@ class TopRatedSection extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              MovieDetailsPage(movie: topRatedMovies[index]),
+                          builder: (_) => BlocProvider(
+                            create: (context) =>
+                                context.read<MovieDetailsCubit>()
+                                  ..initialize(topRatedMovies[index]),
+                            child: MovieDetailsPage(
+                              movie: topRatedMovies[index],
+                            ),
+                          ),
                         ),
                       );
                     },
