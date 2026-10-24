@@ -89,7 +89,9 @@ class MoviesHeroSection extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => MovieDetailsPage(movie: featuredMovie),
+                      builder: (_) => MovieDetailsPage(
+                        movie: featuredMovie,
+                      ),
                     ),
                   );
                 },
