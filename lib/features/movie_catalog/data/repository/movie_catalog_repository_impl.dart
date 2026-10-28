@@ -37,4 +37,14 @@ class MovieCatalogRepositoryImpl implements MovieCatalogRepository {
       (unit) => Right<String, Unit>(unit),
     );
   }
+
+  @override
+  Future<Either<String, List<MovieEntity>>> searchMovies(String title) async {
+    final result = await remoteDataSource.searchMovies(title);
+
+    return result.fold(
+      (error) async => Left<String, List<MovieEntity>>(error),
+      (movies) async => Right<String, List<MovieEntity>>(movies),
+    );
+  }
 }

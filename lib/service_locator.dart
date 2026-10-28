@@ -11,6 +11,7 @@ import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/repository/movie_catalog_repository_impl.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/sources/movie_catalog_remote_data_source.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/repository/movie_catalog_repository.dart';
+import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_search_movie_results_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_top_rated_movies_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_trending_movies_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/update_profile_cover_usecase.dart';
@@ -27,6 +28,7 @@ import 'package:plotline_mobile/features/reviews/domain/repository/review_reposi
 import 'package:plotline_mobile/features/reviews/domain/usecase/get_feed_reviews_usecase.dart';
 import 'package:plotline_mobile/features/reviews/domain/usecase/get_my_reviews_usecase.dart';
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_cubit.dart';
+import 'package:plotline_mobile/features/search/presentation/cubit/search_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // GetIt service locator
@@ -191,6 +193,18 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<MovieDetailsCubit>(
     () => MovieDetailsCubit(
       updateProfileCoverUsecase: sl<UpdateProfileCoverUsecase>(),
+    ),
+  );
+
+  // SEARCH - USE CASES
+  sl.registerLazySingleton<GetSearchMovieResultsUsecase>(
+    () => GetSearchMovieResultsUsecase(repository: sl<MovieCatalogRepository>()),
+  );
+
+  // SEARCH - PRESENTATION
+  sl.registerFactory<SearchCubit>(
+    () => SearchCubit(
+      getSearchMovieResultsUsecase: sl<GetSearchMovieResultsUsecase>(),
     ),
   );
 }

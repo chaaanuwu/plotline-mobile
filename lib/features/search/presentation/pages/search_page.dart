@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/common/widgets/liquid_marble_background/liquid_marble_background.dart';
+import 'package:plotline_mobile/features/search/presentation/pages/search_results_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -30,11 +31,23 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  void _submitSearch() {
+    final query = _searchController.text.trim();
+
+    if (query.isEmpty) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => SearchResultsPage(query: query)),
+    );
+  }
+
   @override
   void dispose() {
     _searchController
       ..removeListener(_onSearchChanged)
       ..dispose();
+
     super.dispose();
   }
 
@@ -42,6 +55,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final primaryColor = context.theme.colorScheme.primary;
     final textColor = context.isDarkMode ? Colors.white : Colors.black;
+
     final subtitleColor = context.isDarkMode
         ? Colors.white70
         : Colors.black.withValues(alpha: 0.7);
@@ -49,7 +63,9 @@ class _SearchPageState extends State<SearchPage> {
     return Stack(
       fit: StackFit.expand,
       children: [
+        // Animated liquid marble background.
         const Positioned.fill(child: LiquidMarbleBackground()),
+
         SafeArea(
           child: Center(
             child: Padding(
@@ -70,7 +86,7 @@ class _SearchPageState extends State<SearchPage> {
                   const SizedBox(height: 4),
 
                   Text(
-                    'Find movies, and fellow cinephiles',
+                    'Find movies and fellow cinephiles',
                     style: TextStyle(color: subtitleColor, fontSize: 14),
                   ),
 
@@ -90,8 +106,9 @@ class _SearchPageState extends State<SearchPage> {
                     child: TextField(
                       controller: _searchController,
                       cursorColor: primaryColor,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      textInputAction: TextInputAction.search,
+                      style: TextStyle(
+                        color: textColor,
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -116,17 +133,19 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                         suffixIcon: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
-                          transitionBuilder: (child, animation) =>
-                              ScaleTransition(
-                                scale: animation,
-                                child: FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                ),
+                          transitionBuilder: (child, animation) {
+                            return ScaleTransition(
+                              scale: animation,
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child,
                               ),
+                            );
+                          },
                           child: _showClearButton
                               ? IconButton(
                                   key: const ValueKey('clear_btn'),
+                                  tooltip: 'Clear search',
                                   icon: const Icon(
                                     LucideIcons.x,
                                     size: 16,
@@ -151,7 +170,7 @@ class _SearchPageState extends State<SearchPage> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(18),
                           borderSide: BorderSide(
-                            color: Colors.white.withValues(alpha: 0.08),
+                            color: textColor.withValues(alpha: 0.08),
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -162,9 +181,7 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         ),
                       ),
-                      onChanged: (value) {
-                        // Connect search query / BLoC event here.
-                      },
+                      onSubmitted: (_) => _submitSearch(),
                     ),
                   ),
                 ],
