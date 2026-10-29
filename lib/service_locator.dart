@@ -29,6 +29,11 @@ import 'package:plotline_mobile/features/reviews/domain/usecase/get_feed_reviews
 import 'package:plotline_mobile/features/reviews/domain/usecase/get_my_reviews_usecase.dart';
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_cubit.dart';
 import 'package:plotline_mobile/features/search/presentation/cubit/search_cubit.dart';
+import 'package:plotline_mobile/features/watchlist/data/repository/watchlist_repository_impl.dart';
+import 'package:plotline_mobile/features/watchlist/data/sources/watchlist_remote_data_source.dart';
+import 'package:plotline_mobile/features/watchlist/domain/repository/watchlist_repository.dart';
+import 'package:plotline_mobile/features/watchlist/domain/usecase/get_watchlist_usecase.dart';
+import 'package:plotline_mobile/features/watchlist/presentation/cubit/watchlist_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // GetIt service locator
@@ -155,7 +160,7 @@ Future<void> initializeDependencies() async {
 
   // MOVIES
 
-  // MOVIE - DATASOURCE
+  // MOVIES - DATASOURCE
   sl.registerLazySingleton<MovieCatalogRemoteDataSource>(
     () => MovieCatalogRemoteDataSourceImpl(apiClient: sl<ApiClient>()),
   );
@@ -198,7 +203,8 @@ Future<void> initializeDependencies() async {
 
   // SEARCH - USE CASES
   sl.registerLazySingleton<GetSearchMovieResultsUsecase>(
-    () => GetSearchMovieResultsUsecase(repository: sl<MovieCatalogRepository>()),
+    () =>
+        GetSearchMovieResultsUsecase(repository: sl<MovieCatalogRepository>()),
   );
 
   // SEARCH - PRESENTATION
@@ -206,5 +212,29 @@ Future<void> initializeDependencies() async {
     () => SearchCubit(
       getSearchMovieResultsUsecase: sl<GetSearchMovieResultsUsecase>(),
     ),
+  );
+
+  // WATCHLIST
+
+  // WATCHLIST - DATASOURCE
+  sl.registerLazySingleton<WatchlistRemoteDataSource>(
+    () => WatchlistRemoteDataSourceImpl(apiClient: sl<ApiClient>()),
+  );
+
+  // WATCHLIST - REPOSITORY
+  sl.registerLazySingleton<WatchlistRepository>(
+    () => WatchlistRepositoryImpl(
+      remoteDataSource: sl<WatchlistRemoteDataSource>(),
+    ),
+  );
+
+  // WATCHLIST - USE CASES
+  sl.registerLazySingleton<GetWatchlistUsecase>(
+    () => GetWatchlistUsecase(repository: sl<WatchlistRepository>()),
+  );
+
+  // WATCHLIST - PRESENTATION
+  sl.registerFactory<WatchlistCubit>(
+    () => WatchlistCubit(getWatchlistUsecase: sl<GetWatchlistUsecase>()),
   );
 }
