@@ -16,6 +16,11 @@ class ApiEndpoints {
   // PROFILE - ME
   static final String userMeProfile = "$baseUrl/profile/me";
 
+  // WATCHLIST
+  static String watchlist([String? userId]) {
+    return userId == null ? "$baseUrl/watchlist" : "$baseUrl/watchlist/$userId";
+  }
+
   // EDIT - PROFILE
   static final String editProfile = "$baseUrl/user/me/edit";
 

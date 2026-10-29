@@ -12,7 +12,7 @@ class WatchlistMovieModel extends WatchlistMovieEntity {
 
   factory WatchlistMovieModel.fromJson(Map<String, dynamic> json) =>
       WatchlistMovieModel(
-        movieId: json['movieId'],
+        movieId: json['_id'],
         title: json['title'],
         overview: json['overview'],
         posterPath: json['posterPath'],

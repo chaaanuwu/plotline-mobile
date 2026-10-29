@@ -9,12 +9,14 @@ class WatchlistModel extends WatchlistEntity {
     required super.createdAt,
   });
 
-  factory WatchlistModel.fromJson(Map<String, dynamic> json) => WatchlistModel(
-    id: json['id'] as String,
-    userId: json['userId'] as String,
-    movie: WatchlistMovieModel.fromJson(
-      Map<String, dynamic>.from(json['movieId']),
-    ),
-    createdAt: json['createdAt'] as String,
-  );
+  factory WatchlistModel.fromJson(Map<String, dynamic> json) {
+    return WatchlistModel(
+      id: json['_id'],
+      userId: json['userId'],
+      movie: WatchlistMovieModel.fromJson(
+        Map<String, dynamic>.from(json['movieId'] as Map),
+      ),
+      createdAt: json['createdAt'],
+    );
+  }
 }
