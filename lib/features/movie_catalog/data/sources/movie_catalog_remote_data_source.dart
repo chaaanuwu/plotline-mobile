@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:plotline_mobile/core/configs/api/api_endpoints.dart';
 import 'package:plotline_mobile/core/network/api_client.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/models/movie_model.dart';
@@ -11,6 +12,8 @@ abstract class MovieCatalogRemoteDataSource {
   Future<Either<String, Unit>> updateProfileCover(String backdropPath);
 
   Future<Either<String, List<MovieModel>>> searchMovies(String title);
+
+  Future<Either<String, MovieModel>> getMovieById(String id);
 }
 
 class MovieCatalogRemoteDataSourceImpl implements MovieCatalogRemoteDataSource {
@@ -108,6 +111,23 @@ class MovieCatalogRemoteDataSourceImpl implements MovieCatalogRemoteDataSource {
       }
 
       return Left("Failed to fetch search results.");
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, MovieModel>> getMovieById(String id) async {
+    try {
+      final response = await apiClient.dio.get(ApiEndpoints.getMovieById(id));
+
+      if (response.statusCode == 200) {
+        final movie = response.data['movie'];
+
+        return Right(MovieModel.fromJson(Map<String, dynamic>.from(movie)));
+      }
+
+      return Left('Failed to fetch movie details.');
     } catch (e) {
       return Left(e.toString());
     }

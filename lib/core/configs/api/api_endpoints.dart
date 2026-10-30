@@ -12,6 +12,7 @@ class ApiEndpoints {
   static final String topRatedMovies = "$baseUrl/tmdb/top-rated";
   static String searchMovies(String title) =>
       "$baseUrl/movies/search?q=${Uri.encodeQueryComponent(title.trim())}"; // Search movie by title
+  static String getMovieById(String id) => "$baseUrl/movies/$id"; // Get movie by id
 
   // PROFILE - ME
   static final String userMeProfile = "$baseUrl/profile/me";

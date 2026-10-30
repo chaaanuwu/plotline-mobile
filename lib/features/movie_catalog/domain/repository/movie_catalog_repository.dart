@@ -8,5 +8,7 @@ abstract class MovieCatalogRepository {
 
   Future<Either<String, List<MovieEntity>>> searchMovies(String title);
 
+  Future<Either<String, MovieEntity>> getMovieById(String id);
+
   Future<Either<String, Unit>> updateProfileCover(String backdropPath);
 }

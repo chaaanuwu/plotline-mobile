@@ -1,14 +1,35 @@
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entity.dart';
+import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_movie_by_id_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/update_profile_cover_usecase.dart';
 import 'package:plotline_mobile/features/movies/presentation/cubit/movie_details/movie_details_state.dart';
 
 class MovieDetailsCubit extends Cubit<MovieDetailsState> {
+  final GetMovieByIdUsecase getMovieByIdUsecase;
   final UpdateProfileCoverUsecase updateProfileCoverUsecase;
 
   MovieDetailsCubit({
+    required this.getMovieByIdUsecase,
     required this.updateProfileCoverUsecase,
   }) : super(MovieDetailsInitial());
+
+  Future<void> loadMovieById(String movieId) async {
+    emit(MovieDetailsLoading());
+
+    final result = await getMovieByIdUsecase(movieId);
+
+    if (isClosed) return;
+
+    result.fold(
+      (error) {
+        emit(MovieDetailsError(error));
+      },
+      (movie) {
+        emit(MovieDetailsLoaded(movie: movie));
+      },
+    );
+  }
 
   void initialize(MovieEntity movie) {
     emit(MovieDetailsLoaded(movie: movie));

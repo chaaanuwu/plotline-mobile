@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_movie_by_id_usecase.dart';
+import 'package:plotline_mobile/features/movies/presentation/cubit/movie_details/movie_details_cubit.dart';
+import 'package:plotline_mobile/features/movies/presentation/pages/movie_details_page.dart';
 import 'package:plotline_mobile/features/watchlist/presentation/cubit/watchlist_cubit.dart';
 import 'package:plotline_mobile/features/watchlist/presentation/cubit/watchlist_state.dart';
 import 'package:plotline_mobile/features/watchlist/presentation/widgets/watchlist_movie_card.dart';
+import 'package:plotline_mobile/service_locator.dart';
 
 class WatchlistTab extends StatelessWidget {
   const WatchlistTab({super.key});
@@ -123,7 +127,35 @@ class WatchlistTab extends StatelessWidget {
                     return WatchlistMovieCard(
                       key: ValueKey(item.id),
                       movie: item.movie,
-                      onTap: () {},
+                      onTap: () async {
+                        final movieId = state.watchlist[index].movie.movieId;
+
+                        // Fetch the complete MovieEntity.
+                        final result = await sl<GetMovieByIdUsecase>()(movieId);
+
+                        if (!context.mounted) return;
+
+                        result.fold(
+                          (error) {
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(SnackBar(content: Text(error)));
+                          },
+                          (movie) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider(
+                                  create: (_) =>
+                                      sl<MovieDetailsCubit>()
+                                        ..initialize(movie),
+                                  child: MovieDetailsPage(movie: movie),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
                     );
                   },
                 ),
