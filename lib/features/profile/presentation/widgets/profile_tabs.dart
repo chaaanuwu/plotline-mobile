@@ -4,6 +4,8 @@ import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_cubit.dart';
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_state.dart';
 import 'package:plotline_mobile/features/reviews/presentation/widgets/review_card.dart';
+import 'package:plotline_mobile/features/watchlist/presentation/cubit/watchlist_cubit.dart';
+import 'package:plotline_mobile/features/watchlist/presentation/widgets/watchlist_tab.dart';
 import 'package:plotline_mobile/service_locator.dart';
 
 class ProfileTabs extends StatefulWidget {
@@ -139,7 +141,10 @@ class _ProfileTabsState extends State<ProfileTabs>
   }
 
   Widget _buildWatchlist() {
-    return const Center(child: Text('Watchlist'));
+    return BlocProvider(
+      create: (context) => sl<WatchlistCubit>()..getWatchlist(null),
+      child: const WatchlistTab(),
+    );
   }
 
   Widget _buildHistory() {
