@@ -183,7 +183,7 @@ class _ProfileTabsState extends State<ProfileTabs>
               sliver: SliverList.builder(
                 itemCount: state.reviews.length,
                 itemBuilder: (context, index) {
-                  return const ReviewCard();
+                  return ReviewCard(review: state.reviews[index]);
                 },
               ),
             );
