@@ -5,41 +5,8 @@ import 'package:plotline_mobile/features/watchlist/presentation/cubit/watchlist_
 import 'package:plotline_mobile/features/watchlist/presentation/cubit/watchlist_state.dart';
 import 'package:plotline_mobile/features/watchlist/presentation/widgets/watchlist_movie_card.dart';
 
-class WatchlistTab extends StatefulWidget {
-  final String? userId;
-
-  const WatchlistTab({super.key, this.userId});
-
-  @override
-  State<WatchlistTab> createState() => _WatchlistTabState();
-}
-
-class _WatchlistTabState extends State<WatchlistTab> {
-  late final ScrollController _scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _scrollController = ScrollController()..addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (!_scrollController.hasClients) return;
-
-    if (_scrollController.position.extentAfter < 200) {
-      context.read<WatchlistCubit>().loadMore(widget.userId);
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
-
-    super.dispose();
-  }
+class WatchlistTab extends StatelessWidget {
+  const WatchlistTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,72 +15,86 @@ class _WatchlistTabState extends State<WatchlistTab> {
 
     return BlocBuilder<WatchlistCubit, WatchlistState>(
       builder: (context, state) {
+        // Initial loading
         if (state is WatchlistLoading || state is WatchlistInitial) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: colors.primary,
-              strokeWidth: 2.5,
+          return SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: colors.primary,
+                strokeWidth: 2.5,
+              ),
             ),
           );
         }
 
+        // Error
         if (state is WatchlistError) {
-          return _buildError(context, state.message);
+          return SliverFillRemaining(
+            hasScrollBody: false,
+            child: _buildError(context, state.message),
+          );
         }
 
+        // Loaded
         if (state is WatchlistLoaded) {
           if (state.watchlist.isEmpty) {
-            return _buildEmptyState(context);
+            return SliverFillRemaining(
+              hasScrollBody: false,
+              child: _buildEmptyState(context),
+            );
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 4,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: colors.primary,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    const SizedBox(width: 9),
-                    Text(
-                      'Watchlist',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colors.primary.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        '${state.watchlist.length}',
-                        style: theme.textTheme.labelMedium?.copyWith(
+          return SliverMainAxisGroup(
+            slivers: [
+              // Watchlist heading
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 14),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 4,
+                        height: 20,
+                        decoration: BoxDecoration(
                           color: colors.primary,
-                          fontWeight: FontWeight.w700,
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 9),
+                      Text(
+                        'Watchlist',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colors.primary.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          '${state.watchlist.length}',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: colors.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Expanded(
-                child: GridView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                sliver: SliverGrid.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 12,
@@ -123,6 +104,7 @@ class _WatchlistTabState extends State<WatchlistTab> {
                   itemCount:
                       state.watchlist.length + (state.isLoadingMore ? 3 : 0),
                   itemBuilder: (context, index) {
+                    // Pagination indicators
                     if (index >= state.watchlist.length) {
                       return Center(
                         child: SizedBox(
@@ -150,11 +132,12 @@ class _WatchlistTabState extends State<WatchlistTab> {
           );
         }
 
-        return const SizedBox.shrink();
+        return const SliverToBoxAdapter(child: SizedBox.shrink());
       },
     );
   }
 
+  // Empty state
   Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
@@ -206,6 +189,7 @@ class _WatchlistTabState extends State<WatchlistTab> {
     );
   }
 
+  // Error state
   Widget _buildError(BuildContext context, String message) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
@@ -238,7 +222,7 @@ class _WatchlistTabState extends State<WatchlistTab> {
             const SizedBox(height: 16),
             OutlinedButton.icon(
               onPressed: () {
-                context.read<WatchlistCubit>().getWatchlist(widget.userId);
+                context.read<WatchlistCubit>().getWatchlist(null);
               },
               icon: const Icon(LucideIcons.refreshCw, size: 16),
               label: const Text('Try again'),
