@@ -6,4 +6,6 @@ abstract class WatchlistRepository {
     String? userId,
     int page,
   );
+
+  Future<Either<String, bool>> isInWatchlist(String movieId);
 }

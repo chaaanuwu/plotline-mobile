@@ -33,6 +33,7 @@ import 'package:plotline_mobile/features/search/presentation/cubit/search_cubit.
 import 'package:plotline_mobile/features/watchlist/data/repository/watchlist_repository_impl.dart';
 import 'package:plotline_mobile/features/watchlist/data/sources/watchlist_remote_data_source.dart';
 import 'package:plotline_mobile/features/watchlist/domain/repository/watchlist_repository.dart';
+import 'package:plotline_mobile/features/watchlist/domain/usecase/get_is_in_watchlist_usecase.dart';
 import 'package:plotline_mobile/features/watchlist/domain/usecase/get_watchlist_usecase.dart';
 import 'package:plotline_mobile/features/watchlist/presentation/cubit/watchlist_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -239,6 +240,10 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<GetWatchlistUsecase>(
     () => GetWatchlistUsecase(repository: sl<WatchlistRepository>()),
   );
+
+  sl.registerLazySingleton<GetIsInWatchlistUsecase>(
+    () => GetIsInWatchlistUsecase(repository: sl<WatchlistRepository>()),
+  );  // IS IN WATCHLIST
 
   // WATCHLIST - PRESENTATION
   sl.registerFactory<WatchlistCubit>(

@@ -20,4 +20,14 @@ class WatchlistRepositoryImpl implements WatchlistRepository {
       (watchlist) async => Right<String, WatchlistResultEntity>(watchlist),
     );
   }
+
+  @override
+  Future<Either<String, bool>> isInWatchlist(String movieId) async {
+    final result = await remoteDataSource.isInWatchlist(movieId);
+
+    return result.fold(
+      (error) async => Left<String, bool>(error),
+      (isInWatchlist) => Right<String, bool>(isInWatchlist),
+    );
+  }
 }

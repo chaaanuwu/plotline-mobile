@@ -9,6 +9,8 @@ abstract class WatchlistRemoteDataSource {
     String? userId,
     int page,
   );
+
+  Future<Either<String, bool>> isInWatchlist(String movieId);
 }
 
 class WatchlistRemoteDataSourceImpl implements WatchlistRemoteDataSource {
@@ -37,6 +39,23 @@ class WatchlistRemoteDataSourceImpl implements WatchlistRemoteDataSource {
         );
 
         return Right(result);
+      }
+
+      return Left('Failed to fetch watchlist');
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, bool>> isInWatchlist(String movieId) async {
+    try {
+      final response = await apiClient.dio.get(
+        ApiEndpoints.isWatchlisted(movieId),
+      );
+
+      if (response.statusCode == 200) {
+        return Right(response.data['watchListed']);
       }
 
       return Left('Failed to fetch watchlist');

@@ -21,6 +21,7 @@ class ApiEndpoints {
   static String watchlist([String? userId]) {
     return userId == null ? "$baseUrl/watchlist" : "$baseUrl/watchlist/$userId";
   }
+  static String isWatchlisted(String movieId) => "$baseUrl/watchlist/movie/$movieId"; // Check if movie is watchlisted
 
   // EDIT - PROFILE
   static final String editProfile = "$baseUrl/user/me/edit";
