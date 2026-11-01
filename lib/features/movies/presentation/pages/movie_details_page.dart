@@ -39,32 +39,11 @@ class MovieDetailsPage extends StatelessWidget {
       child: BlocBuilder<MovieDetailsCubit, MovieDetailsState>(
         builder: (context, state) {
           if (state is MovieDetailsLoaded) {
-            return _buildMovieDetails(context, state.movie);
+            return _buildMovieDetails(context, state);
           }
 
           if (state is MovieDetailsError) {
-            return Scaffold(
-              appBar: AppBar(),
-              body: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.error_outline, size: 48),
-                    const SizedBox(height: 12),
-                    Text(state.message),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<MovieDetailsCubit>().loadMovieById(
-                          movieId!,
-                        );
-                      },
-                      child: const Text('Try Again'),
-                    ),
-                  ],
-                ),
-              ),
-            );
+            return _buildError(context, state.message);
           }
 
           return const Scaffold(
@@ -75,7 +54,42 @@ class MovieDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMovieDetails(BuildContext context, MovieEntity movie) {
+  Widget _buildError(BuildContext context, String message) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline, size: 48),
+
+            const SizedBox(height: 12),
+
+            Text(message),
+
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                final cubit = context.read<MovieDetailsCubit>();
+
+                if (movie != null) {
+                  cubit.initialize(movie!);
+                } else {
+                  cubit.loadMovieById(movieId!);
+                }
+              },
+              child: const Text('Try Again'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMovieDetails(BuildContext context, MovieDetailsLoaded state) {
+    final movie = state.movie;
+
     final screenHeight = MediaQuery.sizeOf(context).height;
     final screenWidth = MediaQuery.sizeOf(context).width;
 
@@ -129,7 +143,11 @@ class MovieDetailsPage extends StatelessWidget {
                       const SizedBox(height: 12),
 
                       // Watched, watchlist, and review actions
-                      const MovieDetailsActions(),
+                      MovieDetailsActions(
+                        isInWatchlist: state.isWatchlisted,
+                        isWatchlistLoading: state.isWatchlistLoading,
+                        onToggleWatchlist: null,
+                      ),
 
                       const SizedBox(height: 32),
 

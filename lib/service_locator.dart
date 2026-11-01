@@ -206,6 +206,7 @@ Future<void> initializeDependencies() async {
     () => MovieDetailsCubit(
       updateProfileCoverUsecase: sl<UpdateProfileCoverUsecase>(),
       getMovieByIdUsecase: sl<GetMovieByIdUsecase>(),
+      isMovieWatchlistedUsecase: sl<GetIsInWatchlistUsecase>(),
     ),
   );
 
@@ -243,7 +244,7 @@ Future<void> initializeDependencies() async {
 
   sl.registerLazySingleton<GetIsInWatchlistUsecase>(
     () => GetIsInWatchlistUsecase(repository: sl<WatchlistRepository>()),
-  );  // IS IN WATCHLIST
+  ); // IS IN WATCHLIST
 
   // WATCHLIST - PRESENTATION
   sl.registerFactory<WatchlistCubit>(

@@ -55,7 +55,7 @@ class WatchlistRemoteDataSourceImpl implements WatchlistRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        return Right(response.data['watchListed']);
+        return Right(response.data['data']['watchListed'] as bool);
       }
 
       return Left('Failed to fetch watchlist');
