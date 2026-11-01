@@ -9,11 +9,16 @@ class MovieDetailsActions extends StatelessWidget {
   final VoidCallback? onToggleWatchlist;
   final VoidCallback? onWriteReview;
 
+  final bool isInWatchlist;
+  final bool isWatchlistLoading;
+
   const MovieDetailsActions({
     super.key,
     this.onMarkWatched,
     this.onToggleWatchlist,
     this.onWriteReview,
+    this.isInWatchlist = false,
+    this.isWatchlistLoading = true,
   });
 
   @override
@@ -56,13 +61,43 @@ class MovieDetailsActions extends StatelessWidget {
 
             Expanded(
               flex: 1,
-              child: BasicAppButton(
-                onPressed: onToggleWatchlist ?? () {},
-                height: 52,
-                backgroundColor: AppColors.accentColor.withValues(alpha: 0.15),
-                textColor: AppColors.accentColor,
-                borderColor: AppColors.accentColor.withValues(alpha: 0.4),
-                title: const Icon(LucideIcons.bookmark, size: 23),
+              child: Tooltip(
+                message: isWatchlistLoading
+                    ? 'Checking watchlist...'
+                    : isInWatchlist
+                    ? 'Remove from Watchlist'
+                    : 'Add to Watchlist',
+                child: BasicAppButton(
+                  onPressed: isWatchlistLoading
+                      ? null
+                      : onToggleWatchlist ?? () {},
+                  height: 52,
+                  backgroundColor: AppColors.accentColor.withValues(
+                    alpha: isInWatchlist ? 1.0 : 0.15,
+                  ),
+                  textColor: isInWatchlist
+                      ? Colors.white
+                      : AppColors.accentColor,
+                  borderColor: AppColors.accentColor.withValues(
+                    alpha: isInWatchlist ? 1.0 : 0.4,
+                  ),
+                  title: isWatchlistLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.accentColor,
+                          ),
+                        )
+                      : Icon(
+                          isInWatchlist ? Icons.bookmark : LucideIcons.bookmark,
+                          size: 23,
+                          color: isInWatchlist
+                              ? Colors.white
+                              : AppColors.accentColor,
+                        ),
+                ),
               ),
             ),
           ],

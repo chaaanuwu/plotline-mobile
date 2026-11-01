@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
             itemCount: state.reviews.length,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemBuilder: (context, index) {
-              return const ReviewCard();
+              return ReviewCard(review: state.reviews[index]);
             },
           );
         }

@@ -11,6 +11,7 @@ class MovieCard extends StatelessWidget {
   final double spacing;
   final double? width;
   final VoidCallback? onTap;
+  final bool showTitle;
 
   const MovieCard({
     super.key,
@@ -22,6 +23,7 @@ class MovieCard extends StatelessWidget {
     this.onTap,
     this.voteAverage,
     this.trendingRank,
+    this.showTitle = true,
   });
 
   @override
@@ -49,8 +51,6 @@ class MovieCard extends StatelessWidget {
                       spacing: spacing,
                     ),
                   ),
-
-                  // Trending Rank Badge
                   if (trendingRank != null)
                     Positioned(
                       top: 8,
@@ -77,8 +77,6 @@ class MovieCard extends StatelessWidget {
                         ),
                       ),
                     ),
-
-                  // Vote Average Rating Badge
                   if (voteAverage != null)
                     Positioned(
                       bottom: 8,
@@ -116,21 +114,20 @@ class MovieCard extends StatelessWidget {
                 ],
               ),
             ),
-
-            const SizedBox(height: 6),
-
-            // Title
-            Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                letterSpacing: -0.2,
+            if (showTitle) ...[
+              const SizedBox(height: 6),
+              Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: -0.2,
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),

@@ -11,6 +11,8 @@ import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/repository/movie_catalog_repository_impl.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/sources/movie_catalog_remote_data_source.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/repository/movie_catalog_repository.dart';
+import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_movie_by_id_usecase.dart';
+import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_search_movie_results_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_top_rated_movies_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_trending_movies_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/update_profile_cover_usecase.dart';
@@ -27,6 +29,13 @@ import 'package:plotline_mobile/features/reviews/domain/repository/review_reposi
 import 'package:plotline_mobile/features/reviews/domain/usecase/get_feed_reviews_usecase.dart';
 import 'package:plotline_mobile/features/reviews/domain/usecase/get_my_reviews_usecase.dart';
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_cubit.dart';
+import 'package:plotline_mobile/features/search/presentation/cubit/search_cubit.dart';
+import 'package:plotline_mobile/features/watchlist/data/repository/watchlist_repository_impl.dart';
+import 'package:plotline_mobile/features/watchlist/data/sources/watchlist_remote_data_source.dart';
+import 'package:plotline_mobile/features/watchlist/domain/repository/watchlist_repository.dart';
+import 'package:plotline_mobile/features/watchlist/domain/usecase/get_is_in_watchlist_usecase.dart';
+import 'package:plotline_mobile/features/watchlist/domain/usecase/get_watchlist_usecase.dart';
+import 'package:plotline_mobile/features/watchlist/presentation/cubit/watchlist_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // GetIt service locator
@@ -153,7 +162,7 @@ Future<void> initializeDependencies() async {
 
   // MOVIES
 
-  // MOVIE - DATASOURCE
+  // MOVIES - DATASOURCE
   sl.registerLazySingleton<MovieCatalogRemoteDataSource>(
     () => MovieCatalogRemoteDataSourceImpl(apiClient: sl<ApiClient>()),
   );
@@ -179,6 +188,11 @@ Future<void> initializeDependencies() async {
     () => UpdateProfileCoverUsecase(repository: sl<MovieCatalogRepository>()),
   );
 
+  // MOVIE DETAILS (GET MOVIE BY ID) - USE CASES
+  sl.registerLazySingleton<GetMovieByIdUsecase>(
+    () => GetMovieByIdUsecase(repository: sl<MovieCatalogRepository>()),
+  );
+
   // MOVIES - PRESENTATION(WIDGET)
   sl.registerFactory<MoviesCubit>(
     () => MoviesCubit(
@@ -191,6 +205,49 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<MovieDetailsCubit>(
     () => MovieDetailsCubit(
       updateProfileCoverUsecase: sl<UpdateProfileCoverUsecase>(),
+      getMovieByIdUsecase: sl<GetMovieByIdUsecase>(),
+      isMovieWatchlistedUsecase: sl<GetIsInWatchlistUsecase>(),
     ),
+  );
+
+  // SEARCH - USE CASES
+  sl.registerLazySingleton<GetSearchMovieResultsUsecase>(
+    () =>
+        GetSearchMovieResultsUsecase(repository: sl<MovieCatalogRepository>()),
+  );
+
+  // SEARCH - PRESENTATION
+  sl.registerFactory<SearchCubit>(
+    () => SearchCubit(
+      getSearchMovieResultsUsecase: sl<GetSearchMovieResultsUsecase>(),
+    ),
+  );
+
+  // WATCHLIST
+
+  // WATCHLIST - DATASOURCE
+  sl.registerLazySingleton<WatchlistRemoteDataSource>(
+    () => WatchlistRemoteDataSourceImpl(apiClient: sl<ApiClient>()),
+  );
+
+  // WATCHLIST - REPOSITORY
+  sl.registerLazySingleton<WatchlistRepository>(
+    () => WatchlistRepositoryImpl(
+      remoteDataSource: sl<WatchlistRemoteDataSource>(),
+    ),
+  );
+
+  // WATCHLIST - USE CASES
+  sl.registerLazySingleton<GetWatchlistUsecase>(
+    () => GetWatchlistUsecase(repository: sl<WatchlistRepository>()),
+  );
+
+  sl.registerLazySingleton<GetIsInWatchlistUsecase>(
+    () => GetIsInWatchlistUsecase(repository: sl<WatchlistRepository>()),
+  ); // IS IN WATCHLIST
+
+  // WATCHLIST - PRESENTATION
+  sl.registerFactory<WatchlistCubit>(
+    () => WatchlistCubit(getWatchlistUsecase: sl<GetWatchlistUsecase>()),
   );
 }

@@ -10,9 +10,18 @@ class ApiEndpoints {
   // MOVIES
   static final String trendingMovies = "$baseUrl/tmdb/trending";
   static final String topRatedMovies = "$baseUrl/tmdb/top-rated";
+  static String searchMovies(String title) =>
+      "$baseUrl/movies/search?q=${Uri.encodeQueryComponent(title.trim())}"; // Search movie by title
+  static String getMovieById(String id) => "$baseUrl/movies/$id"; // Get movie by id
 
   // PROFILE - ME
   static final String userMeProfile = "$baseUrl/profile/me";
+
+  // WATCHLIST
+  static String watchlist([String? userId]) {
+    return userId == null ? "$baseUrl/watchlist" : "$baseUrl/watchlist/$userId";
+  }
+  static String isWatchlisted(String movieId) => "$baseUrl/watchlist/movie/$movieId"; // Check if movie is watchlisted
 
   // EDIT - PROFILE
   static final String editProfile = "$baseUrl/user/me/edit";
