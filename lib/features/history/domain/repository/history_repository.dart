@@ -6,4 +6,6 @@ abstract class HistoryRepository {
     String? userId,
     int page,
   );
+
+  Future<Either<String, bool>> isInHistory(String movieId);
 }

@@ -27,6 +27,7 @@ class ApiEndpoints {
   static String history([String? userId]) {
     return userId == null ? "$baseUrl/history" : "$baseUrl/history/$userId";
   }
+  static String isWatched(String movieId) => "$baseUrl/history/movie/$movieId"; // Check if movie is in history
 
   // EDIT - PROFILE
   static final String editProfile = "$baseUrl/user/me/edit";

@@ -20,4 +20,14 @@ class HistoryRepositoryImpl implements HistoryRepository {
       (history) async => Right<String, HistoryResultEntity>(history),
     );
   }
+
+  @override
+  Future<Either<String, bool>> isInHistory(String movieId) async {
+    final result = await remoteDataSource.isInHistory(movieId);
+
+    return result.fold(
+      (error) async => Left<String, bool>(error),
+      (isInHistory) => Right<String, bool>(isInHistory),
+    );
+  }
 }

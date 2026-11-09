@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plotline_mobile/features/history/domain/usecases/get_is_watched_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/entity/movie_entity.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/get_movie_by_id_usecase.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/usecase/update_profile_cover_usecase.dart';
@@ -10,11 +10,13 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
   final GetMovieByIdUsecase getMovieByIdUsecase;
   final UpdateProfileCoverUsecase updateProfileCoverUsecase;
   final GetIsInWatchlistUsecase isMovieWatchlistedUsecase;
+  final GetIsWatchedUsecase isMovieInHistoryUsecase;
 
   MovieDetailsCubit({
     required this.getMovieByIdUsecase,
     required this.updateProfileCoverUsecase,
     required this.isMovieWatchlistedUsecase,
+    required this.isMovieInHistoryUsecase,
   }) : super(MovieDetailsInitial());
 
   // Load movie details using movie ID
@@ -30,18 +32,66 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
         emit(MovieDetailsError(error));
       },
       (movie) async {
-        emit(MovieDetailsLoaded(movie: movie, isWatchlistLoading: true));
+        emit(MovieDetailsLoaded(movie: movie));
 
-        await checkWatchlistStatus(movie.movieId);
+        await Future.wait([
+          checkWatchlistStatus(movie.movieId),
+          checkHistoryStatus(movie.movieId),
+        ]);
       },
     );
   }
 
   // Initialize with an existing movie
   Future<void> initialize(MovieEntity movie) async {
-    emit(MovieDetailsLoaded(movie: movie, isWatchlistLoading: true));
+    emit(MovieDetailsLoaded(movie: movie));
 
-    await checkWatchlistStatus(movie.movieId);
+    await Future.wait([
+      checkWatchlistStatus(movie.movieId),
+      checkHistoryStatus(movie.movieId),
+    ]);
+  }
+
+  // Check whether movie is in history
+  Future<void> checkHistoryStatus(String movieId) async {
+    final currentState = state;
+
+    if (currentState is! MovieDetailsLoaded) return;
+
+    if (currentState.movie.movieId != movieId) return;
+
+    emit(
+      currentState.copyWith(isHistoryLoading: true, clearHistoryError: true),
+    );
+
+    final result = await isMovieInHistoryUsecase(
+      IsInHistoryParams(movieId: movieId),
+    );
+
+    if (isClosed) return;
+
+    final latestState = state;
+
+    if (latestState is! MovieDetailsLoaded) return;
+
+    if (latestState.movie.movieId != movieId) return;
+
+    result.fold(
+      (error) {
+        emit(
+          latestState.copyWith(isHistoryLoading: false, historyError: error),
+        );
+      },
+      (isInHistory) {
+        emit(
+          latestState.copyWith(
+            isInHistory: isInHistory,
+            isHistoryLoading: false,
+            clearHistoryError: true,
+          ),
+        );
+      },
+    );
   }
 
   // Check whether movie is in watchlist
@@ -71,9 +121,6 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
 
     if (latestState.movie.movieId != movieId) return;
 
-    debugPrint('========== WATCHLIST DEBUG ==========');
-    debugPrint('Movie ID: $movieId');
-
     result.fold(
       (error) {
         emit(
@@ -82,7 +129,6 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
             watchlistError: error,
           ),
         );
-        debugPrint('Watchlist error: $error');
       },
       (isWatchlisted) {
         emit(
@@ -92,10 +138,8 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
             clearWatchlistError: true,
           ),
         );
-        debugPrint('Watchlist result: $isWatchlisted');
       },
     );
-    debugPrint('=====================================');
   }
 
   // Update profile cover using movie backdrop

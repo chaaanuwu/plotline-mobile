@@ -9,6 +9,8 @@ abstract class HistoryRemoteDataSource {
     String? userId,
     int page,
   );
+
+  Future<Either<String, bool>> isInHistory(String movieId);
 }
 
 class HistoryRemoteDataSourceImpl implements HistoryRemoteDataSource {
@@ -37,6 +39,23 @@ class HistoryRemoteDataSourceImpl implements HistoryRemoteDataSource {
         );
 
         return Right(result);
+      }
+
+      return Left('Failed to fetch history');
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, bool>> isInHistory(String movieId) async {
+    try {
+      final response = await apiClient.dio.get(
+        ApiEndpoints.isWatched(movieId),
+      );
+
+      if (response.statusCode == 200) {
+        return Right(response.data['data'] != null ? true : false);
       }
 
       return Left('Failed to fetch history');

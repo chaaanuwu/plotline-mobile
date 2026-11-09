@@ -144,8 +144,16 @@ class MovieDetailsPage extends StatelessWidget {
 
                       // Watched, watchlist, and review actions
                       MovieDetailsActions(
+                        isInHistory: state.isInHistory,
+                        isHistoryLoading: state.isHistoryLoading,
+
+                        // watchlist status
                         isInWatchlist: state.isWatchlisted,
                         isWatchlistLoading: state.isWatchlistLoading,
+
+                        onMarkWatched: null,
+
+                        // Existing watchlist callback
                         onToggleWatchlist: null,
                       ),
 

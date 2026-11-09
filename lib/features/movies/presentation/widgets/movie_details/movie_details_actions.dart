@@ -9,6 +9,11 @@ class MovieDetailsActions extends StatelessWidget {
   final VoidCallback? onToggleWatchlist;
   final VoidCallback? onWriteReview;
 
+  // History
+  final bool isInHistory;
+  final bool isHistoryLoading;
+
+  // Watchlist
   final bool isInWatchlist;
   final bool isWatchlistLoading;
 
@@ -17,6 +22,8 @@ class MovieDetailsActions extends StatelessWidget {
     this.onMarkWatched,
     this.onToggleWatchlist,
     this.onWriteReview,
+    this.isInHistory = false,
+    this.isHistoryLoading = true,
     this.isInWatchlist = false,
     this.isWatchlistLoading = true,
   });
@@ -30,35 +37,53 @@ class MovieDetailsActions extends StatelessWidget {
       children: [
         Row(
           children: [
+            // Mark as Watched
             Expanded(
               flex: 3,
-              child: BasicAppButton(
-                onPressed: onMarkWatched ?? () {},
-                height: 52,
-                backgroundColor: primaryColor,
-                textColor: Colors.white,
-                title: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(LucideIcons.circleCheckBig, size: 22),
-                    SizedBox(width: 8),
-                    Flexible(
-                      child: Text(
-                        'Mark as Watched',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+              child: Tooltip(
+                message: isHistoryLoading
+                    ? 'Checking history...'
+                    : isInHistory
+                    ? 'Already Watched'
+                    : 'Mark as Watched',
+                child: BasicAppButton(
+                  onPressed: () {},
+                  height: 52,
+                  backgroundColor: primaryColor,
+                  textColor: Colors.white,
+                  title: isHistoryLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(LucideIcons.circleCheckBig, size: 22),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                isInHistory ? 'Watched' : 'Mark as Watched',
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ),
 
             const SizedBox(width: 12),
 
+            // Watchlist
             Expanded(
               flex: 1,
               child: Tooltip(
@@ -68,19 +93,15 @@ class MovieDetailsActions extends StatelessWidget {
                     ? 'Remove from Watchlist'
                     : 'Add to Watchlist',
                 child: BasicAppButton(
-                  onPressed: isWatchlistLoading
-                      ? null
-                      : onToggleWatchlist ?? () {},
+                  onPressed: () {},
                   height: 52,
                   backgroundColor: AppColors.accentColor.withValues(
-                    alpha: isInWatchlist ? 1.0 : 0.15,
+                    alpha: 0.15,
                   ),
                   textColor: isInWatchlist
                       ? Colors.white
                       : AppColors.accentColor,
-                  borderColor: AppColors.accentColor.withValues(
-                    alpha: isInWatchlist ? 1.0 : 0.4,
-                  ),
+                  borderColor: AppColors.accentColor.withValues(alpha: 1.0),
                   title: isWatchlistLoading
                       ? const SizedBox(
                           width: 20,
@@ -93,9 +114,7 @@ class MovieDetailsActions extends StatelessWidget {
                       : Icon(
                           isInWatchlist ? Icons.bookmark : LucideIcons.bookmark,
                           size: 23,
-                          color: isInWatchlist
-                              ? Colors.white
-                              : AppColors.accentColor,
+                          color: AppColors.accentColor,
                         ),
                 ),
               ),
@@ -105,10 +124,11 @@ class MovieDetailsActions extends StatelessWidget {
 
         const SizedBox(height: 12),
 
+        // Write a Review
         SizedBox(
           width: double.infinity,
           child: BasicAppButton(
-            onPressed: onWriteReview ?? () {},
+            onPressed: () {},
             height: 52,
             backgroundColor: secondaryColor.withValues(alpha: 0.15),
             textColor: secondaryColor,

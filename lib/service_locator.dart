@@ -12,6 +12,7 @@ import 'package:plotline_mobile/features/history/data/repository/history_reposit
 import 'package:plotline_mobile/features/history/data/sources/history_remote_data_source.dart';
 import 'package:plotline_mobile/features/history/domain/repository/history_repository.dart';
 import 'package:plotline_mobile/features/history/domain/usecases/get_history_usecase.dart';
+import 'package:plotline_mobile/features/history/domain/usecases/get_is_watched_usecase.dart';
 import 'package:plotline_mobile/features/history/presentation/cubit/history_cubit.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/repository/movie_catalog_repository_impl.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/sources/movie_catalog_remote_data_source.dart';
@@ -211,6 +212,7 @@ Future<void> initializeDependencies() async {
     () => MovieDetailsCubit(
       updateProfileCoverUsecase: sl<UpdateProfileCoverUsecase>(),
       getMovieByIdUsecase: sl<GetMovieByIdUsecase>(),
+      isMovieInHistoryUsecase: sl<GetIsWatchedUsecase>(),
       isMovieWatchlistedUsecase: sl<GetIsInWatchlistUsecase>(),
     ),
   );
@@ -273,6 +275,10 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<GetHistoryUsecase>(
     () => GetHistoryUsecase(repository: sl<HistoryRepository>()),
   );
+
+   sl.registerLazySingleton<GetIsWatchedUsecase>(
+    () => GetIsWatchedUsecase(repository: sl<HistoryRepository>()),
+  ); // IS IN HISTORY
 
   // HISTORY - PRESENTATION
   sl.registerFactory<HistoryCubit>(
