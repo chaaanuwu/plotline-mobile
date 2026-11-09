@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
+import 'package:plotline_mobile/features/history/presentation/cubit/history_cubit.dart';
+import 'package:plotline_mobile/features/history/presentation/widgets/history_tab.dart';
 
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_cubit.dart';
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_state.dart';
@@ -28,6 +30,7 @@ class _ProfileTabsState extends State<ProfileTabs>
 
   late ReviewCubit _reviewCubit;
   late WatchlistCubit _watchlistCubit;
+  late HistoryCubit _historyCubit;
 
   @override
   void initState() {
@@ -38,6 +41,8 @@ class _ProfileTabsState extends State<ProfileTabs>
     _reviewCubit = sl<ReviewCubit>()..getMyReviews();
 
     _watchlistCubit = sl<WatchlistCubit>()..getWatchlist(null);
+
+    _historyCubit = sl<HistoryCubit>()..getHistory(null);
 
     _tabController.addListener(_onTabChanged);
 
@@ -75,7 +80,7 @@ class _ProfileTabsState extends State<ProfileTabs>
 
     _reviewCubit.close();
     _watchlistCubit.close();
-
+    _historyCubit.close();
     super.dispose();
   }
 
@@ -212,9 +217,9 @@ class _ProfileTabsState extends State<ProfileTabs>
 
   // HISTORY
   Widget _buildHistory() {
-    return const SliverFillRemaining(
-      hasScrollBody: false,
-      child: Center(child: Text('History')),
+   return BlocProvider.value(
+      value: _historyCubit,
+      child: const HistoryTab(),
     );
   }
 }

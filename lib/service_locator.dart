@@ -8,6 +8,11 @@ import 'package:plotline_mobile/features/auth/domain/usecases/get_saved_auth.dar
 import 'package:plotline_mobile/features/auth/domain/usecases/signin_usecase.dart';
 import 'package:plotline_mobile/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:plotline_mobile/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:plotline_mobile/features/history/data/repository/history_repository_impl.dart';
+import 'package:plotline_mobile/features/history/data/sources/history_remote_data_source.dart';
+import 'package:plotline_mobile/features/history/domain/repository/history_repository.dart';
+import 'package:plotline_mobile/features/history/domain/usecases/get_history_usecase.dart';
+import 'package:plotline_mobile/features/history/presentation/cubit/history_cubit.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/repository/movie_catalog_repository_impl.dart';
 import 'package:plotline_mobile/features/movie_catalog/data/sources/movie_catalog_remote_data_source.dart';
 import 'package:plotline_mobile/features/movie_catalog/domain/repository/movie_catalog_repository.dart';
@@ -249,5 +254,28 @@ Future<void> initializeDependencies() async {
   // WATCHLIST - PRESENTATION
   sl.registerFactory<WatchlistCubit>(
     () => WatchlistCubit(getWatchlistUsecase: sl<GetWatchlistUsecase>()),
+  );
+  
+  // HISTORY
+
+  // HISTORY - DATASOURCE
+  sl.registerLazySingleton<HistoryRemoteDataSource>(
+    () => HistoryRemoteDataSourceImpl(apiClient: sl<ApiClient>()),
+  );
+
+  // HISTORY - REPOSITORY
+  sl.registerLazySingleton<HistoryRepository>(
+    () =>
+        HistoryRepositoryImpl(remoteDataSource: sl<HistoryRemoteDataSource>()),
+  );
+
+  // HISTORY - USE CASES
+  sl.registerLazySingleton<GetHistoryUsecase>(
+    () => GetHistoryUsecase(repository: sl<HistoryRepository>()),
+  );
+
+  // HISTORY - PRESENTATION
+  sl.registerFactory<HistoryCubit>(
+    () => HistoryCubit(getHistoryUsecase: sl<GetHistoryUsecase>()),
   );
 }
