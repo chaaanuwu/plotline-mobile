@@ -23,6 +23,11 @@ class ApiEndpoints {
   }
   static String isWatchlisted(String movieId) => "$baseUrl/watchlist/movie/$movieId"; // Check if movie is watchlisted
 
+  // HISTORY
+  static String history([String? userId]) {
+    return userId == null ? "$baseUrl/history" : "$baseUrl/history/$userId";
+  }
+
   // EDIT - PROFILE
   static final String editProfile = "$baseUrl/user/me/edit";
 
