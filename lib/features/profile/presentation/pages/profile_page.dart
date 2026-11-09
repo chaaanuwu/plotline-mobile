@@ -139,30 +139,58 @@ class _ProfilePageState extends State<ProfilePage> {
 
                       // Joined date
                       if (joinedDate.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.theme.colorScheme.secondary
-                                .withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: context.theme.colorScheme.secondary
-                                  .withValues(alpha: 0.25),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
                             ),
-                          ),
-                          child: Text(
-                            'Since $joinedDate',
-                            style: context.theme.textTheme.labelSmall?.copyWith(
-                              color: context.theme.colorScheme.secondary,
-                              fontWeight: FontWeight.w600,
+                            decoration: BoxDecoration(
+                              color: context.theme.colorScheme.secondary
+                                  .withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: context.theme.colorScheme.secondary
+                                    .withValues(alpha: 0.25),
+                              ),
+                            ),
+                            child: Text(
+                              'Since $joinedDate',
+                              style: context.theme.textTheme.labelSmall?.copyWith(
+                                color: context.theme.colorScheme.secondary,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
                       ],
+
+                      // Followers and following
+                      Row(
+                        children: [
+                          _ProfileStat(
+                            value: followersCount,
+                            label: 'followers',
+                          ),
+                      
+                          Container(
+                            width: 1,
+                            height: 22,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                            ),
+                            color: context.theme.dividerColor.withValues(
+                              alpha: 0.5,
+                            ),
+                          ),
+                      
+                          _ProfileStat(
+                            value: followingCount,
+                            label: 'following',
+                          ),
+                        ],
+                      ),
 
                       // About
                       if (about.isNotEmpty) ...[
@@ -175,27 +203,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ],
                     ],
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Followers and following
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      color: context.theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        _ProfileStat(value: followersCount, label: 'FOLLOWERS'),
-                        const _StatDivider(),
-                        _ProfileStat(value: followingCount, label: 'FOLLOWING'),
-                      ],
-                    ),
                   ),
                 ),
 
@@ -219,33 +226,26 @@ class _ProfileStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(
-            value.toString(),
-            style: context.theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        Text(
+          NumberFormat.compact().format(value),
+          style: context.theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.5,
           ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: context.theme.textTheme.bodySmall?.copyWith(
-              color: context.theme.colorScheme.onSurfaceVariant,
-            ),
+        ),
+        const SizedBox(width: 5),
+        Text(
+          label,
+          style: context.theme.textTheme.bodySmall?.copyWith(
+            color: context.theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w500,
           ),
-        ],
-      ),
+        ),
+      ],
     );
-  }
-}
-
-class _StatDivider extends StatelessWidget {
-  const _StatDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(width: 1, height: 32, color: context.theme.dividerColor);
   }
 }
