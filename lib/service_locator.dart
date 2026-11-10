@@ -28,7 +28,9 @@ import 'package:plotline_mobile/features/profile/data/repository/profile_reposit
 import 'package:plotline_mobile/features/profile/data/sources/profile_remote_data_source.dart';
 import 'package:plotline_mobile/features/profile/domain/repository/profile_repository.dart';
 import 'package:plotline_mobile/features/profile/domain/usecase/get_me_use_case.dart';
+import 'package:plotline_mobile/features/profile/domain/usecase/get_user_profile_usecase.dart';
 import 'package:plotline_mobile/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:plotline_mobile/features/profile/presentation/cubit/user_profile_cubit.dart';
 import 'package:plotline_mobile/features/reviews/data/repository/review_repository_impl.dart';
 import 'package:plotline_mobile/features/reviews/data/sources/review_remote_data_source.dart';
 import 'package:plotline_mobile/features/reviews/domain/repository/review_repository.dart';
@@ -128,12 +130,20 @@ Future<void> initializeDependencies() async {
     () => GetMeUseCase(repository: sl<ProfileRepository>()),
   );
 
+  sl.registerLazySingleton<GetUserProfileUsecase>(
+    () => GetUserProfileUsecase(repository: sl<ProfileRepository>()),
+  );
+
   // PROFILE - PRESENTATION
   // ProfileCubit manages the state of the profile screen
   // Factory is used because a new ProfileCubit should be created
   // whenever a new ProfileCubit provider is created.
   sl.registerFactory<ProfileCubit>(
     () => ProfileCubit(getMeUseCase: sl<GetMeUseCase>()),
+  );
+
+  sl.registerFactory<UserProfileCubit>(
+    () => UserProfileCubit(getUserProfileUsecase: sl<GetUserProfileUsecase>()),
   );
 
   // REVIEWS
@@ -257,7 +267,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<WatchlistCubit>(
     () => WatchlistCubit(getWatchlistUsecase: sl<GetWatchlistUsecase>()),
   );
-  
+
   // HISTORY
 
   // HISTORY - DATASOURCE
@@ -276,7 +286,7 @@ Future<void> initializeDependencies() async {
     () => GetHistoryUsecase(repository: sl<HistoryRepository>()),
   );
 
-   sl.registerLazySingleton<GetIsWatchedUsecase>(
+  sl.registerLazySingleton<GetIsWatchedUsecase>(
     () => GetIsWatchedUsecase(repository: sl<HistoryRepository>()),
   ); // IS IN HISTORY
 

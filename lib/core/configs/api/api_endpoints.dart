@@ -12,22 +12,32 @@ class ApiEndpoints {
   static final String topRatedMovies = "$baseUrl/tmdb/top-rated";
   static String searchMovies(String title) =>
       "$baseUrl/movies/search?q=${Uri.encodeQueryComponent(title.trim())}"; // Search movie by title
-  static String getMovieById(String id) => "$baseUrl/movies/$id"; // Get movie by id
+  static String getMovieById(String id) =>
+      "$baseUrl/movies/$id"; // Get movie by id
 
-  // PROFILE - ME
-  static final String userMeProfile = "$baseUrl/profile/me";
+  // PROFILE
+  // CURRENT USER
+  static String userMeProfile = "$baseUrl/profile/me";
+  // USER
+  static String userProfile(String userId) {
+    return "$baseUrl/user/$userId";
+  }
 
   // WATCHLIST
   static String watchlist([String? userId]) {
     return userId == null ? "$baseUrl/watchlist" : "$baseUrl/watchlist/$userId";
   }
-  static String isWatchlisted(String movieId) => "$baseUrl/watchlist/movie/$movieId"; // Check if movie is watchlisted
+
+  static String isWatchlisted(String movieId) =>
+      "$baseUrl/watchlist/movie/$movieId"; // Check if movie is watchlisted
 
   // HISTORY
   static String history([String? userId]) {
     return userId == null ? "$baseUrl/history" : "$baseUrl/history/$userId";
   }
-  static String isWatched(String movieId) => "$baseUrl/history/movie/$movieId"; // Check if movie is in history
+
+  static String isWatched(String movieId) =>
+      "$baseUrl/history/movie/$movieId"; // Check if movie is in history
 
   // EDIT - PROFILE
   static final String editProfile = "$baseUrl/user/me/edit";

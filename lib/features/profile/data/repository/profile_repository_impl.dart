@@ -17,4 +17,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
       (profileModel) async => Right<String, ProfileEntity?>(profileModel),
     );
   }
+
+  @override
+  Future<Either<String, ProfileEntity?>> getUserProfile(String userId) async {
+    final result = await remoteDataSource.getUserProfile(userId);
+
+    return result.fold(
+      (error) async => Left<String, ProfileEntity?>(error),
+      (profileModel) async => Right<String, ProfileEntity?>(profileModel),
+    );
+  }
 }
