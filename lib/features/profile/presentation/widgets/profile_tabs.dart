@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/features/history/presentation/cubit/history_cubit.dart';
+import 'package:plotline_mobile/features/history/presentation/cubit/history_state.dart';
 import 'package:plotline_mobile/features/history/presentation/widgets/history_tab.dart';
 
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_cubit.dart';
@@ -17,8 +18,15 @@ import 'package:plotline_mobile/service_locator.dart';
 
 class ProfileTabs extends StatefulWidget {
   final ScrollController scrollController;
+  final String userId;
+  final bool isOwnProfile;
 
-  const ProfileTabs({super.key, required this.scrollController});
+  const ProfileTabs({
+    super.key,
+    required this.scrollController,
+    required this.userId,
+    required this.isOwnProfile,
+  });
 
   @override
   State<ProfileTabs> createState() => _ProfileTabsState();
@@ -38,14 +46,16 @@ class _ProfileTabsState extends State<ProfileTabs>
 
     _tabController = TabController(length: 3, vsync: this);
 
-    _reviewCubit = sl<ReviewCubit>()..getMyReviews();
+    final userId = widget.isOwnProfile ? null : widget.userId;
 
-    _watchlistCubit = sl<WatchlistCubit>()..getWatchlist(null);
+    _reviewCubit = sl<ReviewCubit>()
+      ..getMyReviews(); // Needs updating for other users.
 
-    _historyCubit = sl<HistoryCubit>()..getHistory(null);
+    _watchlistCubit = sl<WatchlistCubit>()..getWatchlist(userId);
+
+    _historyCubit = sl<HistoryCubit>()..getHistory(userId);
 
     _tabController.addListener(_onTabChanged);
-
     widget.scrollController.addListener(_onScroll);
   }
 
@@ -56,20 +66,36 @@ class _ProfileTabsState extends State<ProfileTabs>
   }
 
   void _onScroll() {
-    if (_tabController.index != 1) return;
+  if (!widget.scrollController.hasClients) return;
 
-    if (!widget.scrollController.hasClients) return;
+  final position = widget.scrollController.position;
 
-    final position = widget.scrollController.position;
+  if (position.extentAfter >= 400) return;
 
-    if (position.extentAfter < 400) {
-      final state = _watchlistCubit.state;
+  final userId = widget.isOwnProfile ? null : widget.userId;
 
-      if (state is WatchlistLoaded && !state.isLoadingMore) {
-        _watchlistCubit.loadMore(null);
-      }
+  // Watchlist pagination
+  if (_tabController.index == 1) {
+    final watchlistState = _watchlistCubit.state;
+
+    if (watchlistState is WatchlistLoaded &&
+        watchlistState.hasMore &&
+        !watchlistState.isLoadingMore) {
+      _watchlistCubit.loadMore(userId);
     }
   }
+
+  // History pagination
+  if (_tabController.index == 2) {
+    final historyState = _historyCubit.state;
+
+    if (historyState is HistoryLoaded &&
+        historyState.hasMore &&
+        !historyState.isLoadingMore) {
+      _historyCubit.loadMore(userId);
+    }
+  }
+}
 
   @override
   void dispose() {
@@ -217,9 +243,6 @@ class _ProfileTabsState extends State<ProfileTabs>
 
   // HISTORY
   Widget _buildHistory() {
-   return BlocProvider.value(
-      value: _historyCubit,
-      child: const HistoryTab(),
-    );
+    return BlocProvider.value(value: _historyCubit, child: const HistoryTab());
   }
 }
