@@ -4,6 +4,7 @@ import 'package:plotline_mobile/common/widgets/movie_poster/poster_card.dart';
 import 'package:plotline_mobile/common/widgets/review_comment_sheet/review_comment_sheet.dart';
 import 'package:plotline_mobile/core/configs/assets/app_images.dart';
 import 'package:plotline_mobile/core/configs/urls/image_config.dart';
+import 'package:plotline_mobile/features/profile/presentation/pages/profile_page.dart';
 import 'package:plotline_mobile/features/reviews/presentation/widgets/genre_chip.dart';
 import 'package:plotline_mobile/features/reviews/presentation/widgets/review_action.dart';
 import 'package:plotline_mobile/features/reviews/presentation/widgets/review_options.dart';
@@ -66,12 +67,19 @@ class ReviewItemState extends State<ReviewItem> {
             padding: const EdgeInsets.fromLTRB(16, 16, 8, 14),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 22,
-                  backgroundImage:
-                      user.avatar != null && user.avatar!.toString().isNotEmpty
-                      ? NetworkImage(user.avatar!)
-                      : const AssetImage(AppImages.defaultpfp) as ImageProvider,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => ProfilePage(userId: user.userId),
+                    ));
+                  },
+                  child: CircleAvatar(
+                    radius: 22,
+                    backgroundImage:
+                        user.avatar != null && user.avatar!.toString().isNotEmpty
+                        ? NetworkImage(user.avatar!)
+                        : const AssetImage(AppImages.defaultpfp) as ImageProvider,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
