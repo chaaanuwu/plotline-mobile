@@ -6,6 +6,8 @@ import 'package:plotline_mobile/features/profile/data/models/profile_model.dart'
 
 abstract class ProfileRemoteDataSource {
   Future<Either<String, ProfileModel>> getMe();
+
+  Future<Either<String, ProfileModel>> getUserProfile(String userId);
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -17,6 +19,29 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   Future<Either<String, ProfileModel>> getMe() async {
     try {
       final response = await apiClient.dio.get(ApiEndpoints.userMeProfile);
+
+      if (response.statusCode == 200) {
+        return Right(
+          ProfileModel.fromJson(Map<String, dynamic>.from(response.data)),
+        );
+      }
+
+      return Left(
+        _messageFromResponse(response.data, 'Failed to get user data'),
+      );
+    } on DioException catch (e) {
+      return Left(
+        _messageFromResponse(e.response?.data, 'Something went wrong'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<String, ProfileModel>> getUserProfile(String userId) async {
+    try {
+      final response = await apiClient.dio.get(
+        ApiEndpoints.userProfile(userId),
+      );
 
       if (response.statusCode == 200) {
         return Right(
