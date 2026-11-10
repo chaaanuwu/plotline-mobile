@@ -38,12 +38,13 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _profileCubit,
-      child: Builder(
-        builder: (context) {
-          final state = context.watch<ProfileCubit>().state;
-
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _profileCubit),
+        BlocProvider(create: (context) => sl<MoviesCubit>()..getMovieCatalog()),
+      ],
+      child: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
           final avatar = state is ProfileLoaded
               ? state.profile.user.avatarUrl
               : '';
@@ -51,10 +52,7 @@ class _MainPageState extends State<MainPage> {
           final pages = [
             const HomePage(),
             const SearchPage(),
-            BlocProvider(
-              create: (context) => sl<MoviesCubit>()..getMovieCatalog(),
-              child: const MoviesPage(),
-            ),
+            const MoviesPage(),
             const ProfilePage(),
           ];
 
