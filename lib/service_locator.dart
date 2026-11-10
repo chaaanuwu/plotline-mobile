@@ -28,7 +28,7 @@ import 'package:plotline_mobile/features/profile/data/repository/profile_reposit
 import 'package:plotline_mobile/features/profile/data/sources/profile_remote_data_source.dart';
 import 'package:plotline_mobile/features/profile/domain/repository/profile_repository.dart';
 import 'package:plotline_mobile/features/profile/domain/usecase/get_me_use_case.dart';
-import 'package:plotline_mobile/features/profile/presentation/bloc/profile_cubit.dart';
+import 'package:plotline_mobile/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:plotline_mobile/features/reviews/data/repository/review_repository_impl.dart';
 import 'package:plotline_mobile/features/reviews/data/sources/review_remote_data_source.dart';
 import 'package:plotline_mobile/features/reviews/domain/repository/review_repository.dart';

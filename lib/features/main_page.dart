@@ -4,7 +4,8 @@ import 'package:plotline_mobile/common/widgets/bottom_navigation_bar/plotline_bo
 import 'package:plotline_mobile/features/home/presentation/pages/home_page.dart';
 import 'package:plotline_mobile/features/movies/presentation/cubit/movies/movies_cubit.dart';
 import 'package:plotline_mobile/features/movies/presentation/pages/movies_page.dart';
-import 'package:plotline_mobile/features/profile/presentation/bloc/profile_cubit.dart';
+import 'package:plotline_mobile/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:plotline_mobile/features/profile/presentation/cubit/profile_state.dart';
 import 'package:plotline_mobile/features/profile/presentation/pages/profile_page.dart';
 import 'package:plotline_mobile/features/search/presentation/pages/search_page.dart';
 import 'package:plotline_mobile/service_locator.dart';
@@ -41,19 +42,19 @@ class _MainPageState extends State<MainPage> {
       value: _profileCubit,
       child: Builder(
         builder: (context) {
-          final profileData = context.watch<ProfileCubit>().state;
+          final state = context.watch<ProfileCubit>().state;
 
-          final avatar = profileData?.user.avatarUrl;
+          final avatar = state is ProfileLoaded
+              ? state.profile.user.avatarUrl
+              : '';
 
           final pages = [
             const HomePage(),
             const SearchPage(),
-
             BlocProvider(
               create: (context) => sl<MoviesCubit>()..getMovieCatalog(),
               child: const MoviesPage(),
             ),
-
             const ProfilePage(),
           ];
 
@@ -68,7 +69,6 @@ class _MainPageState extends State<MainPage> {
                 child: pages[_currentIndex],
               ),
             ),
-
             bottomNavigationBar: PlotlineBottomNavBar(
               currentIndex: _currentIndex,
               avatarUrl: avatar,
