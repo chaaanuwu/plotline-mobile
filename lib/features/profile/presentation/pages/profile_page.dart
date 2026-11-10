@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/core/configs/assets/app_images.dart';
 import 'package:plotline_mobile/core/configs/theme/app_colors.dart';
 import 'package:plotline_mobile/core/configs/urls/image_config.dart';
-import 'package:plotline_mobile/features/profile/presentation/bloc/profile_cubit.dart';
+import 'package:plotline_mobile/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:plotline_mobile/features/profile/presentation/cubit/profile_state.dart';
 import 'package:plotline_mobile/features/profile/presentation/widgets/profile_header_skeleton.dart';
 import 'package:plotline_mobile/features/profile/presentation/widgets/profile_tabs.dart';
 
@@ -35,26 +35,29 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final profileData = context.watch<ProfileCubit>().state;
-
-    final firstName = profileData?.user.firstName ?? '';
-    final lastName = profileData?.user.lastName ?? '';
-    final avatar = profileData?.user.avatarUrl;
-    final cover = profileData?.user.coverUrl;
-    final about = profileData?.user.about ?? '';
-    final createdAt = profileData?.user.createdAt ?? '';
-
-    final followersCount = profileData?.followersCount ?? 0;
-    final followingCount = profileData?.followingCount ?? 0;
-
-    final date = createdAt.isNotEmpty ? DateTime.tryParse(createdAt) : null;
-
-    final joinedDate = date != null ? DateFormat('MMMM yyyy').format(date) : '';
-
     return Scaffold(
-      body: profileData == null
-          ? const ProfileHeaderSkeleton()
-          : CustomScrollView(
+      body: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state is ProfileInitial || state is ProfileLoading) {
+            return const ProfileHeaderSkeleton();
+          }
+
+          if (state is ProfileError) {
+            return Center(child: Text(state.message));
+          }
+
+          if (state is ProfileLoaded) {
+            final profile = state.profile;
+
+            final date = profile.user.createdAt.isNotEmpty
+                ? DateTime.tryParse(profile.user.createdAt)
+                : null;
+
+            final joinedDate = date != null
+                ? DateFormat('MMMM yyyy').format(date)
+                : '';
+
+            return CustomScrollView(
               controller: _scrollController,
               slivers: [
                 // Profile header
@@ -69,13 +72,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           SizedBox(
                             width: double.infinity,
                             height: 240,
-                            child: cover == null || cover.isEmpty
+                            child: profile.user.coverUrl.isEmpty
                                 ? Image.asset(
                                     AppImages.plotlineCover,
                                     fit: BoxFit.cover,
                                   )
                                 : Image.network(
-                                    '${ImageConfig.tmdbBackdropBaseUrl}$cover',
+                                    '${ImageConfig.tmdbBackdropBaseUrl}${profile.user.coverUrl}',
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return Image.asset(
@@ -116,10 +119,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               child: CircleAvatar(
                                 radius: 55,
-                                backgroundImage:
-                                    avatar == null || avatar.isEmpty
+                                backgroundImage: profile.user.avatarUrl.isEmpty
                                     ? const AssetImage(AppImages.defaultpfp)
-                                    : NetworkImage(avatar),
+                                    : NetworkImage(profile.user.avatarUrl),
                               ),
                             ),
                           ),
@@ -135,7 +137,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '$firstName $lastName'.trim(),
+                              '${profile.user.firstName} ${profile.user.lastName}'
+                                  .trim(),
                               style: context.theme.textTheme.headlineSmall
                                   ?.copyWith(fontWeight: FontWeight.w800),
                             ),
@@ -179,10 +182,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             Row(
                               children: [
                                 _ProfileStat(
-                                  value: followersCount,
+                                  value: profile.followersCount,
                                   label: 'followers',
                                 ),
-
                                 Container(
                                   width: 1,
                                   height: 22,
@@ -193,19 +195,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                     alpha: 0.5,
                                   ),
                                 ),
-
                                 _ProfileStat(
-                                  value: followingCount,
+                                  value: profile.followingCount,
                                   label: 'following',
                                 ),
                               ],
                             ),
 
                             // About
-                            if (about.isNotEmpty) ...[
+                            if (profile.user.about.isNotEmpty) ...[
                               const SizedBox(height: 14),
                               Text(
-                                about,
+                                profile.user.about,
                                 style: context.theme.textTheme.bodyMedium
                                     ?.copyWith(height: 1.5),
                               ),
@@ -221,7 +222,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 ProfileTabs(scrollController: _scrollController),
               ],
-            ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
     );
   }
 }
