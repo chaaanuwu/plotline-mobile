@@ -10,6 +10,7 @@ import 'package:plotline_mobile/features/movies/presentation/widgets/movie_detai
 import 'package:plotline_mobile/features/movies/presentation/widgets/movie_details/movie_metadata_row.dart';
 import 'package:plotline_mobile/features/movies/presentation/widgets/movie_details/movie_overview_section.dart';
 import 'package:plotline_mobile/features/movies/presentation/widgets/movie_details/movie_release_status.dart';
+import 'package:plotline_mobile/features/movies/presentation/widgets/skeletons/movie_details_skeleton.dart';
 import 'package:plotline_mobile/service_locator.dart';
 
 class MovieDetailsPage extends StatelessWidget {
@@ -47,7 +48,7 @@ class MovieDetailsPage extends StatelessWidget {
           }
 
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body: Center(child: MovieDetailsSkeleton()),
           );
         },
       ),
