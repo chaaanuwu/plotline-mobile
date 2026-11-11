@@ -4,5 +4,7 @@ import 'package:plotline_mobile/features/reviews/domain/entity/review_entity.dar
 abstract class ReviewRepository {
   Future<Either<String, List<ReviewEntity>>> getMyReviews();
 
+  Future<Either<String, List<ReviewEntity>>> getUserReviews(String userId);
+
   Future<Either<String, List<ReviewEntity>>> getFeedReviews();
 }

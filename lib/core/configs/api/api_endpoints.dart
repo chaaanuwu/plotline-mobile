@@ -42,9 +42,11 @@ class ApiEndpoints {
   // EDIT - PROFILE
   static final String editProfile = "$baseUrl/user/me/edit";
 
-  //REVIEWS - FEED
+  //REVIEWS
+  // FEED
   static final String feedReviews = "$baseUrl/feed";
-
-  // REVIEWS - ME
+  // ME
   static final String myReviews = "$baseUrl/reviews";
+  // USER
+  static String userReviews(String userId) => "$baseUrl/users/$userId/reviews";
 }

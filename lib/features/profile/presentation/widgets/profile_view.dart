@@ -211,10 +211,6 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                         ],
-
-                        // Put profile-specific actions here.
-                        // Edit Profile for own profile.
-                        // Follow button for another user's profile.
                       ],
                     ),
                   ),
@@ -224,7 +220,11 @@ class _ProfileViewState extends State<ProfileView> {
               ),
             ),
 
-            ProfileTabs(scrollController: _scrollController),
+            ProfileTabs(
+              scrollController: _scrollController,
+              userId: profile.user.userId,
+              isOwnProfile: widget.isOwnProfile,
+            ),
           ],
         ),
       );
