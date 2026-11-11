@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modern_animated_loader/flutter_animated_loader.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:plotline_mobile/common/helpers/is_dark_mode.dart';
 import 'package:plotline_mobile/common/widgets/button/basic_app_button.dart';
@@ -52,12 +53,12 @@ class MovieDetailsActions extends StatelessWidget {
                   backgroundColor: primaryColor,
                   textColor: Colors.white,
                   title: isHistoryLoading
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
+                          child: FlutterAnimatedLoader.staggerWave(
                             color: Colors.white,
+                            size: 28,
                           ),
                         )
                       : Row(
@@ -103,12 +104,12 @@ class MovieDetailsActions extends StatelessWidget {
                       : AppColors.accentColor,
                   borderColor: AppColors.accentColor.withValues(alpha: 1.0),
                   title: isWatchlistLoading
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
+                          child: FlutterAnimatedLoader.staggerWave(
                             color: AppColors.accentColor,
+                            size: 28,
                           ),
                         )
                       : Icon(
