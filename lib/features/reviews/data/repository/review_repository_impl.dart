@@ -19,6 +19,18 @@ class ReviewRepositoryImpl implements ReviewRepository {
   }
 
   @override
+  Future<Either<String, List<ReviewEntity>>> getUserReviews(
+    String userId,
+  ) async {
+    final result = await remoteDataSource.getUserReviews(userId);
+
+    return result.fold(
+      (error) async => Left<String, List<ReviewEntity>>(error),
+      (reviews) async => Right<String, List<ReviewEntity>>(reviews),
+    );
+  }
+
+  @override
   Future<Either<String, List<ReviewEntity>>> getFeedReviews() async {
     final result = await remoteDataSource.getFeedReviews();
 

@@ -36,6 +36,7 @@ import 'package:plotline_mobile/features/reviews/data/sources/review_remote_data
 import 'package:plotline_mobile/features/reviews/domain/repository/review_repository.dart';
 import 'package:plotline_mobile/features/reviews/domain/usecase/get_feed_reviews_usecase.dart';
 import 'package:plotline_mobile/features/reviews/domain/usecase/get_my_reviews_usecase.dart';
+import 'package:plotline_mobile/features/reviews/domain/usecase/get_user_reviews_usecase.dart';
 import 'package:plotline_mobile/features/reviews/presentation/cubit/review_cubit.dart';
 import 'package:plotline_mobile/features/search/presentation/cubit/search_cubit.dart';
 import 'package:plotline_mobile/features/watchlist/data/repository/watchlist_repository_impl.dart';
@@ -163,6 +164,10 @@ Future<void> initializeDependencies() async {
     () => GetMyReviewsUsecase(repository: sl<ReviewRepository>()),
   );
 
+  sl.registerLazySingleton<GetUserReviewsUsecase>(
+    () => GetUserReviewsUsecase(repository: sl<ReviewRepository>()),
+  );
+
   // REVIEW - USE CASES
   sl.registerLazySingleton<GetFeedReviewsUsecase>(
     () => GetFeedReviewsUsecase(repository: sl<ReviewRepository>()),
@@ -172,6 +177,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<ReviewCubit>(
     () => ReviewCubit(
       getMyReviewsUsecase: sl<GetMyReviewsUsecase>(),
+      getUserReviewsUsecase: sl<GetUserReviewsUsecase>(),
       getFeedReviewsUsecase: sl<GetFeedReviewsUsecase>(),
     ),
   );

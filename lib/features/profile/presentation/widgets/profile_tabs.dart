@@ -48,8 +48,9 @@ class _ProfileTabsState extends State<ProfileTabs>
 
     final userId = widget.isOwnProfile ? null : widget.userId;
 
-    _reviewCubit = sl<ReviewCubit>()
-      ..getMyReviews(); // Needs updating for other users.
+    _reviewCubit = userId == null
+        ? (sl<ReviewCubit>()..getMyReviews())
+        : (sl<ReviewCubit>()..getUserReviews(userId));
 
     _watchlistCubit = sl<WatchlistCubit>()..getWatchlist(userId);
 
@@ -66,36 +67,36 @@ class _ProfileTabsState extends State<ProfileTabs>
   }
 
   void _onScroll() {
-  if (!widget.scrollController.hasClients) return;
+    if (!widget.scrollController.hasClients) return;
 
-  final position = widget.scrollController.position;
+    final position = widget.scrollController.position;
 
-  if (position.extentAfter >= 400) return;
+    if (position.extentAfter >= 400) return;
 
-  final userId = widget.isOwnProfile ? null : widget.userId;
+    final userId = widget.isOwnProfile ? null : widget.userId;
 
-  // Watchlist pagination
-  if (_tabController.index == 1) {
-    final watchlistState = _watchlistCubit.state;
+    // Watchlist pagination
+    if (_tabController.index == 1) {
+      final watchlistState = _watchlistCubit.state;
 
-    if (watchlistState is WatchlistLoaded &&
-        watchlistState.hasMore &&
-        !watchlistState.isLoadingMore) {
-      _watchlistCubit.loadMore(userId);
+      if (watchlistState is WatchlistLoaded &&
+          watchlistState.hasMore &&
+          !watchlistState.isLoadingMore) {
+        _watchlistCubit.loadMore(userId);
+      }
+    }
+
+    // History pagination
+    if (_tabController.index == 2) {
+      final historyState = _historyCubit.state;
+
+      if (historyState is HistoryLoaded &&
+          historyState.hasMore &&
+          !historyState.isLoadingMore) {
+        _historyCubit.loadMore(userId);
+      }
     }
   }
-
-  // History pagination
-  if (_tabController.index == 2) {
-    final historyState = _historyCubit.state;
-
-    if (historyState is HistoryLoaded &&
-        historyState.hasMore &&
-        !historyState.isLoadingMore) {
-      _historyCubit.loadMore(userId);
-    }
-  }
-}
 
   @override
   void dispose() {
